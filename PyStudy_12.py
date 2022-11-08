@@ -37,5 +37,3 @@ stack.push(3)
 print(stack.show())
 print(stack.size())
 stack.printStack()
-
-
