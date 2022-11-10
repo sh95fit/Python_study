@@ -62,6 +62,3 @@ test_module.printAuthor()
 #클래스 사용
 test_info = test_module.Pay("A102030", 20000, "2021-06-13")
 print(test_info.get_pay_info())
-
-#다른 파일에서 실행되므로 __main__이 아닌 모듈명 출력
-print(test_module.__name__)
