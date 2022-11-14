@@ -18,6 +18,6 @@
 
 
 # 대안
-f = open("C:/Users/tpgns/Desktop/Python_Study/test.txt", 'w')  # \를 /로 변경
+f = open("C:/Users/tpgns/Desktop/Python_Study/Python_Basic/test.txt", 'w')  # \를 /로 변경
 f.write("test")
 f.close()
