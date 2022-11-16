@@ -2,6 +2,10 @@
 '''
 입력을 받은 데이터를 DB에 저장하기
 추후 통신을 통해 받아온 데이터 저장 시 활용!
+
+fetchall() : 모든 row를 가져올 때 사용
+fetchone() : 한 row를 가져올 때 사용(연속 사용 시 다음 row로 cursor 이동)
+fetchmany(n) : n개만큼의 row를 가져올 때 사용
 '''
 
 import sqlite3
