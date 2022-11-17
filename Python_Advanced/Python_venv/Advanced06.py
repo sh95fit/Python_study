@@ -53,7 +53,7 @@ ex> 함수 호출
 매개변수 앞에 *가 붙는다. (튜플형태로 받아옴!)
 
 ex> 함수 정의
-    def print_fruits(&args)
+    def print_fruits(*args)
         for arg in args :
             print(arg)
 
@@ -107,7 +107,7 @@ post_info(1)
 
 def post_info(title, content='내용없음') :
     print("제목 : ", title)
-    print("내용", content)
+    print("내용 : ", content)
 
 post_info(content= "내용", title= "제목")
 
