@@ -118,7 +118,7 @@ class Math :
 # 정적 메서드로 되어있는 경우 인스턴스를 만들 필요가 없다.
 # 정적 메서드 호출
 print(Math.add(4,5))
-print(Math.sub(5,4))
+print(Math.sub(5,4)) 
 
 
 
