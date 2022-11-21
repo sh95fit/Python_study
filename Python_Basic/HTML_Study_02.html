@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>HTML_Study_02</title>
+
+    <!--클래스 사용을 위한 정의-->
+    <style>
+        .bg-red{background-color: red}
+        #color-white{color:white}
+    </style>
+</head>
+<body>
+    <!--HTML4에서는 div로 구분! / HTML5부터는 header,section,footer 사용 가능!-->
+    <header>
+        <h1>HTML5</h1>
+        <nav>
+            <!--ul : 순서가 없는 리스트-->
+            <ul>
+                <li>메뉴1</li>
+                <li>메뉴2</li>
+                <li>메뉴3</li>
+            </ul>
+            <!--ol : 순서가 있는 리스트-->
+            <ol>
+                <li>메뉴4</li>
+                <li>메뉴5</li>
+                <li>메뉴6</li>
+            </ol>
+        </nav>
+    </header>
+    <section>
+        <h2>HTML5 사용법</h2>
+        <article><strong>소제목 or 내용</strong></article>
+        <div>
+            <p>문단내용1</p>
+            <br><p>문단내용2</p></br>
+            <blockquote>인용내용</blockquote>
+            <!-- pre 태그 사용 시 띄워쓰기 적용-->
+            <pre>       Pre 내용  </pre>
+        </div>
+        <div>
+            <p><mark>형광펜 효과 내기</mark></p>
+            <!--반복되는 작업에 대비하기 위해 class 사용! class 사용 시 head부분에 정의해주어야한다!-->
+            <p><mark class="bg-red">형광펜</mark></p>효과 내기
+            <p><mark style="background-color: blue">형광펜</mark></p>효과 내기
+            <p><mark style="background-color: blue">형광펜</mark></p>효과 내기
+            <p><mark id = "color-white"></p>
+            <p><mark class="bg-red">형광펜</mark></p>효과 내기
+        </div>
+        <div>
+            <p> 웹의 창시자인 팀버러스 리의 <q site="http://www.w3c.org">웹</q> </p>
+        </div>
+        <div>
+            <table>
+                <caption>테이블 활용 방법</caption>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>월</th>
+                        <th>화</th>
+                        <th>수</th>
+                        <th>목</th>
+                        <th>금</th>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th>M</th>
+                        <th>T</th>
+                        <th>W</th>
+                        <th>T</th>
+                        <th>F</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>1</th>
+                        <td>국어</td>
+                        <td>영어</td>
+                        <td>수학</td>
+                        <td>과학</td>
+                        <td>국사</td>
+                    </tr>
+                    <tr>
+                        <th>2</th>
+                        <td>수학</td>
+                        <td>체육</td>
+                        <td>영어</td>
+                        <td>국어</td>
+                        <td>미술</td>
+                    </tr>
+                    <tr>
+                        <th>3</th>
+                        <td>한자</td>
+                        <td>영어</td>
+                        <td>과학</td>
+                        <td>체육</td>
+                        <td>수학</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <td colspan="6">내용</td>
+                </tfoot>
+            </table>
+        </div>
+        <div>
+            <!--title은 링크에 커서를 가져다 댔을 때 표시되는 이름을 의미-->
+            <a href="http://www.naver.com" title="네이버" target="_blank">네이버</a>
+            <a href="http://www.daum.net" title="다음" target="_blank">다음</a>
+            <a href="http://www.google.com" title="구글" target="_blank">구글</a>
+        </div>
+        <div>
+            <!--이미지 주소로부터 이미지를 불러오지 못한 경우 띄워주는 메세지를 alt 태그로 표시!-->
+            <img src="https://shared-comic.pstatic.net/thumb/webtoon/783053/thumbnail/thumbnail_IMAG10_7e1a48d2-11e0-4455-a668-fff349d8b3f3.jpg" alt="웹툰이미지">
+        </div>
+
+    </section>
+    <footer>
+        <copyright>Copyright &copy; 2022 </copyright>
+        <address>부산광역시 00구 00동</address>
+    </footer>
+
+</body>
+</html>
