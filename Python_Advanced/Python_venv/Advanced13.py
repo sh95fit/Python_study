@@ -71,7 +71,7 @@ DML(Data Manipulation Language) : 데이터 조작 언어
 '''
 
 # SQLite에서 실행!
-
+'''
 #SQL_DDL - post 테이블 생성
 CREATE TABLE post(id integer primary key, title text not null default '제목없음', content text default '제목없음');
 DROP TABLE post;
@@ -90,3 +90,4 @@ ALTER TABLE board DROP COLUMN post_date;
 
 #SQL_DDL - 테이블 수정(column(열) 이름 변경)
 ALTER TABLE board RENAME COLUMN post_date TO reg_date;
+'''
