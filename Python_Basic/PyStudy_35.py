@@ -110,7 +110,7 @@ cv2.waitKey(0)
 org = cv2.imread('./Python_Basic/image/mandrill.png')
 
 averaged33 = cv2.GaussianBlur(org, (3,3), 1)
-averaged99 = cv2.GaussianBlur(org, (9,9), 2)    # (이미지, 영역사이즈, 값이 높을수록 흐림처리가 커진다)
+averaged99 = cv2.GaussianBlur(org, (9,9), 2)    # (이미지, 영역사이즈, 값) : 값이 높을수록 흐림처리가 커진다
 
 cv2.imshow('original', org)
 cv2.imshow('filter1', averaged33)
