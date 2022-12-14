@@ -56,5 +56,28 @@ ex>
 :nth-child      - n번째 자식
 :nth-of-type    - n번째 타입
 
-
 '''
+
+from bs4 import BeautifulSoup as BS
+# module 'collections' has no attribute 'Callable' 에러 대응
+# collections.Callable 참조가 파이썬 3.10부터 collections.abc.Callable로 이동하여, 제거된 Attribute라서 발생하는 오류
+import collections     
+if not hasattr(collections, 'Callable'):
+    collections.Callable = collections.abc.Callable
+#------------------------------------------------------------------
+
+
+# BS 적용 테스트
+# * Tip! multi line string : """ 줄이 바껴도 주석이 풀리지 않음 """
+html = """
+<html>
+    <body>
+        <div>안녕하세요</div>
+    </body>
+</html>
+"""
+
+soup = BS(html, "html.parser")
+
+div = soup.select("div")
+print(div[0].get_text(strip=True))
