@@ -172,3 +172,5 @@ poetry.toml
 
 .png
 .exe
+
+/Python_Crawling/Crawling_Dynamic/Dynamic_info.py
