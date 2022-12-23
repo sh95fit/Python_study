@@ -391,12 +391,164 @@ find_visible(
 
 time.sleep(2)
 
-memory_list = parse_products()
+ssd_list = parse_products()
 
-for memory in memory_list:
-    print(memory)
+for ssd in ssd_list:
+    print(ssd)
 
-time.sleep(5)
 
+# 케이스
+go_to_category("케이스")
+
+choose_maker("케이스")
+
+# 제품 분류
+find_visible("#estimateMainSearchOption > div > div.search_option_list > div:nth-child(2) > div.search_cate_contents > button").click()
+options = finds_visible(
+    "#estimateMainSearchOption > div > div.search_option_list > div:nth-child(2) > div.search_cate_contents.open > ul > li")
+i = choose_one_op("제품 분류", options)
+find_visible(
+    f"#estimateMainSearchOption > div > div.search_option_list > div:nth-child(2) > div.search_cate_contents.open > ul > li:nth-child({i}) > label > span"
+).click()
+
+time.sleep(2)
+
+case_list = parse_products()
+
+for case in case_list:
+    print(case)
+
+
+# 파워
+go_to_category("파워")
+
+choose_maker("파워")
+
+# 제품 분류
+find_visible("#estimateMainSearchOption > div > div.search_option_list > div:nth-child(2) > div.search_cate_contents > button").click()
+options = finds_visible(
+    "#estimateMainSearchOption > div > div.search_option_list > div:nth-child(2) > div.search_cate_contents.open > ul > li")
+i = choose_one_op("제품 분류", options)
+find_visible(
+    f"#estimateMainSearchOption > div > div.search_option_list > div:nth-child(2) > div.search_cate_contents.open > ul > li:nth-child({i}) > label > span"
+).click()
+
+# 정격 출력
+find_visible("#estimateMainSearchOption > div > div.search_option_list > div:nth-child(3) > div.search_cate_contents > button").click()
+options = finds_visible(
+    "#estimateMainSearchOption > div > div.search_option_list > div:nth-child(3) > div.search_cate_contents.open > ul > li")
+i = choose_one_op("정격 출력 선택", options)
+find_visible(
+    f"#estimateMainSearchOption > div > div.search_option_list > div:nth-child(3) > div.search_cate_contents.open > ul > li:nth-child({i}) > label > span"
+).click()
+
+
+#
+
+time.sleep(2)
+
+power_list = parse_products()
+
+for power in power_list:
+    print(power)
+
+print("\n\n")
+
+
+# 인기 조합
+popular = {
+    "cpu" : cpu_list[0],
+    "mainboard" : mainboard_list[0],
+    "memory" : memory_list[0],
+    "graphic_card" : graphic_list[0],
+    "SSD" : ssd_list[0],
+    "case" : case_list[0],
+    "power" : power_list[0],
+}
+
+print("인기 1위 조합")
+print("cpu")
+print(popular["cpu"])
+
+print("mainboard")
+print(popular["mainboard"])
+
+print("memory")
+print(popular["memory"])
+
+print("graphic card")
+print(popular["graphic_card"])
+
+print("SSD")
+print(popular["SSD"])
+
+print("case")
+print(popular["case"])
+
+print("power")
+print(popular["power"])
+
+
+# 가성비 조합
+# recommend = {
+#     "cpu" : min([x[1] for x in cpu_list]),
+#     "mainboard" : min([x[1] for x in mainboard_list]),
+#     "memory" : min([x[1] for x in memory_list]),
+#     "graphic_card" : min([x[1] for x in graphic_list]),
+#     "SSD" : min([x[1] for x in ssd_list]),
+#     "case" : min([x[1] for x in case_list]),
+#     "power" : min([x[1] for x in power_list]),
+# }   
+
+# 위 딕셔너리는 price만 출력이 가능하므로 name과 조합
+# cheap_idx = 0   # 가장 싼 cpu의 순번을 나타내줌
+# for i in range(len(cpu_list)) :
+#     cheap = cpu_list[cheap_idx]
+#     cpu = cpu_list[i]
+#     if cpu[i] < cheap[1] :
+#         cheap_idx = i
+
+# 가성비 조합(함수 형태)
+# 함수를 활용하여 위 내용을 간단하게 만들어줌
+def find_cheap(arr) :
+    cheap_idx = 0   # 가장 싼 cpu의 순번을 나타내줌
+    for i in range(len(arr)) :
+        cheap = arr[cheap_idx]
+        a = arr[i]
+        if int(a[1].replace(',','')) < int(cheap[1].replace(',','')) :
+            cheap_idx = i 
+    return arr[cheap_idx]
+
+recommend = {
+    "cpu" : find_cheap(cpu_list),
+    "mainboard" : find_cheap(mainboard_list),
+    "memory" : find_cheap(memory_list),
+    "graphic_card" : find_cheap(graphic_list),
+    "SSD" : find_cheap(ssd_list),
+    "case" : find_cheap(case_list),
+    "power" : find_cheap(power_list),
+}   
+
+print("\n\n가성비 1위 조합")
+print("cpu")
+print(recommend["cpu"])
+
+print("mainboard")
+print(recommend["mainboard"])
+
+print("memory")
+print(recommend["memory"])
+
+print("graphic card")
+print(recommend["graphic_card"])
+
+print("SSD")
+print(recommend["SSD"])
+
+print("case")
+print(recommend["case"])
+
+print("power")
+print(recommend["power"])
 
 chrome.quit()
