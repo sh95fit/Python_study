@@ -9,6 +9,12 @@ from selenium.webdriver.common.keys import Keys
 import time
 import os
 
+# 태그 내 속성의 값을 가져오기 위한 bs4 활용
+import requests
+from bs4 import BeautifulStoneSoup
+
+
+
 # 다나와 PC 견적 사이트
 url = "https://shop.danawa.com/virtualestimate/?controller=estimateMain&methods=index&marketPlaceSeq=16&logger_kw=dnw_gnb_esti"
 
@@ -36,6 +42,13 @@ def finds_visible(css_selector):
     find_visible(css_selector)
     return chrome.find_elements(By.CSS_SELECTOR, css_selector)
 
+# iframe으로 프레임별로 다른 HTML을 활용하는 영역으로 이동하기 위한 함수
+def Frame(id) :
+    chrome.switch_to.parent_frame()     # 부모 프레임으로 이동 (기본 프레임)
+    find_visible("iframe#"+id)
+    chrome.switch_to.frame(id) 
+
+
 # 다나와 PC 견적 웹페이지 접속
 chrome.get(url)
 
@@ -56,7 +69,7 @@ chrome.get(url)
 
 
 # 클래스의 카테고리 영역의 번호를 지정해둔 후 이를 불러와 활용하는 방법
-catagory = {
+category = {
     "CPU" : "873",
     "메인보드" : "875",
     "메모리" : "874",
@@ -66,12 +79,34 @@ catagory = {
     "파워" : "880",
 }
 
+category_css = {
+    # Dictionary Comprehension
+    c : "dd.category_" + category[c] + " a" for c in category
+    # 반복이 필요
+    # "CPU": "dd.category_" + catagory["CPU"] + " a",
+    # "메인보드": "dd.category_" + catagory["메인보드"] + " a",
+    # "메모리": "dd.category_" + catagory["메모리"] + " a",
+    # "그래픽카드": "dd.category_" + catagory["그래픽카드"] + " a",
+    # "SSD": "dd.category_" + catagory["SSD"] + " a",
+    # "케이스": "dd.category_" + catagory["케이스"] + " a",
+    # "파워": "dd.category_" + catagory["파워"] + " a",
+}
 
-cpu = find_visible("dd.category_" + catagory["CPU"] + " a")
+# CPU 카테고리 클릭
+cpu = find_visible(category_css["CPU"])
 cpu.click()
 
-mainboard = find_visible("dd.category_" + catagory["메인보드"] + " a")
-mainboard.click()
+time.sleep(1)
+
+# CPU 조건 선택
+
+# 옵션 전체 보기 선택
+find_visible("div.search_option_title button").click()
+# CPU 제조사 선택
+cpu_makers = finds_visible("input[name=makerCode]")
+
+for i in range(len(cpu_makers)) :
+    print(str(i+1) + ". " + cpu_makers[i].get_attribute('data'))    # get_attribute : 태그 내 속성의 값을 가져올 때 사용
 
 time.sleep(5)
 
