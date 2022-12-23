@@ -1,4 +1,4 @@
-# Selenium 상품 클릭 및 탭 이동 (유저 인터렉션)
+# Selenium 상품 클릭, 탭 이동, 옵션 선택 및 결제 (유저 인터렉션)
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -9,8 +9,11 @@ import os
 import pyperclip    # 클립보드 - 복사(Copy) 시 임시로 저장되는 것이 가능하도록 해줌
 from Dynamic_info import id_info, pw_info
 
+options = webdriver.ChromeOptions()
+options.add_argument("window-size=1400,1000")
+
 chrome = webdriver.Chrome(
-    "./Python_Crawling/Crawling_Dynamic/chromedriver.exe")
+    "./Python_Crawling/Crawling_Dynamic/chromedriver.exe", options=options)
 wait = WebDriverWait(chrome, 10)
 short_wait = WebDriverWait(chrome, 3)
 
@@ -134,10 +137,45 @@ time.sleep(2)
 # chrome.window_handles[0]    # 먼저 열린 탭
 # chrome.window_handles[1]    # 나중에 열린 탭
 
-chrome.switch_to.window(chrome.window_handles[1])
+chrome.switch_to.window(chrome.window_handles[1])   # 스위치를 통해 탭을 이동시켜줌
 print(chrome.title)
 
+# 탭 이동 후 로딩될 때까지 기다림
+find_visible(wait, "a[aria-haspopup='listbox']")
+
+# 옵션 버튼 가져오기
+options = chrome.find_elements(By.CSS_SELECTOR, "a[aria-haspopup='listbox']")
+
+
+# 첫번째 옵션 선택하기
+options[0].click()
+find_visible(wait, "ul[role='listbox'] a[role='option']:nth-child(1)")
+
+# 첫번째 내부 옵션 선택
+# items = chrome.find_elements(By.CSS_SELECTOR, "ul[role='listbox'] a[role='option']")
+# items[0].click()  # 가독성이 좋음
+# 성능을 향상에는 리스트를 만드는 것 보다 CSS_Selector를 통해 정해주는 것이 더 유리
+item = chrome.find_element(By.CSS_SELECTOR, "ul[role='listbox'] a[role='option']:nth-child(1)")
+print(f"기종 선택 : {item.text}")
+item.click()
+
+
+# 두번째 옵선 선택하기
+options[1].click()
+time.sleep(0.1)
+
+
+# 두번째 내부 옵션 선택하기
+item_op1 = chrome.find_element(By.CSS_SELECTOR, "ul[role='listbox'] a[role='option']:nth-child(1)")
+print(f"제품 선택 : {item_op1.text}")
+item_op1.click()
+
+# 결제하기 버튼 누르기
+payment = chrome.find_element(By.CSS_SELECTOR, "div[class *= 'sys_chk_buy']")
+payment.click()
+
 time.sleep(5)
+
 
 # 모든 탭 종료
 # chrome.close()  # 크롬과 연결되어 있는 탭만 끄는 것이므로 새로운 탭은 끄지 못한다!
