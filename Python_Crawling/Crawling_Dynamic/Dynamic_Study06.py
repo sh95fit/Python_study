@@ -20,6 +20,7 @@ url = "https://shop.danawa.com/virtualestimate/?controller=estimateMain&methods=
 
 options = webdriver.ChromeOptions()
 options.add_argument("window-size=1400,1000")
+options.add_experimental_option("excludeSwitches", ["enable-logging"])
 
 chrome =webdriver.Chrome("./Python_Crawling/Crawling_Dynamic/chromedriver.exe", options=options)
 
@@ -48,6 +49,40 @@ def Frame(id) :
     find_visible("iframe#"+id)
     chrome.switch_to.frame(id) 
 
+# 제조사 옵션 출력 함수
+def choose_one(text, options) :
+    print("-------------------------")
+    print(text)
+    print("-------------------------")
+    for i in range(len(options)) :
+        print(f"{i+1}. {options[i].get_attribute('data')}")
+    choose = input(">>> ")
+    return int(choose) 
+
+# 제조사 이외 옵션 출력 함수
+def choose_one_op(text, options):
+    print("-------------------------")
+    print(text)
+    print("-------------------------")
+    for i in range(len(options)):
+        print(f"{i+1}. {options[i].text}")
+    choose = input(">>> ")
+    return int(choose)
+
+# 공통되는 CSS SELECTOR 경로를 함수로 지정해서 다른 장비에서도 가져다 씀!
+def parse_products() :
+    products = []
+    for p in finds_visible("table.tbl_list > tbody > tr[class^=productList_]") :
+        name = p.find_element(
+            By.CSS_SELECTOR, "td[class=title_price] p[class=subject]").text
+        try:
+            price = p.find_element(
+                By.CSS_SELECTOR, "td[class=rig_line] span[class=prod_price]").text
+        except:
+            continue
+        # print(name + "   " + price)
+        products.append((name, price))
+    return products
 
 # 다나와 PC 견적 웹페이지 접속
 chrome.get(url)
@@ -79,6 +114,7 @@ category = {
     "파워" : "880",
 }
 
+
 category_css = {
     # Dictionary Comprehension
     c : "dd.category_" + category[c] + " a" for c in category
@@ -102,14 +138,80 @@ time.sleep(1)
 
 # 옵션 전체 보기 선택
 find_visible("div.search_option_title button").click()
+
+
 # CPU 제조사 선택
 cpu_makers = finds_visible("input[name=makerCode]")
 
-for i in range(len(cpu_makers)) :
-    print(str(i+1) + ". " + cpu_makers[i].get_attribute('data'))    # get_attribute : 태그 내 속성의 값을 가져올 때 사용
+# for i in range(len(cpu_makers)) :
+#     print(str(i+1) + ". " + cpu_makers[i].get_attribute('data'))    # get_attribute : 태그 내 속성의 값을 가져올 때 사용
+num = choose_one("CPU 제조사", cpu_makers)
+print(cpu_makers[num-1].get_attribute('data'))
+# 클릭 요소가 span 태그로 되어 있어 따로 아래와 같이 span 태그+ nth-child 조합으로 활용한다 
+test = find_visible(
+    f"#estimateMainSearchOption > div > div.search_option_list > div:nth-child(1) > div.search_cate_contents > ul > li:nth-child({num}) > label > span")
+test.click()
+
+
+# CPU 종류 선택
+if (num-1) == 0 :
+    find_visible(
+        "#estimateMainSearchOption > div > div.search_option_list > div:nth-child(2) > div.search_cate_contents > button").click()
+    options = finds_visible(
+        f"#estimateMainSearchOption > div > div.search_option_list > div:nth-child(2) > div.search_cate_contents.open > ul > li")
+    i = choose_one_op("인텔 CPU 종류 선택", options)
+    find_visible(
+        f"#estimateMainSearchOption > div > div.search_option_list > div:nth-child(2) > div.search_cate_contents.open > ul > li:nth-child({i}) > label > span"
+    ).click()
+
+elif (num-1) == 1 :
+    find_visible(
+        "#estimateMainSearchOption > div > div.search_option_list > div:nth-child(3) > div.search_cate_contents > button").click()
+    options = finds_visible(
+        f"#estimateMainSearchOption > div > div.search_option_list > div:nth-child(3) > div.search_cate_contents.open > ul > li")
+    i = choose_one_op("AMD CPU 종류 선택", options)
+    find_visible(
+        f"#estimateMainSearchOption > div > div.search_option_list > div:nth-child(3) > div.search_cate_contents.open > ul > li:nth-child({i}) > label > span"
+    ).click()
+
+time.sleep(2)
+
+# CPU 제품 목록 가져오기
+
+# CSS SELECTOR - OR 연산 = 쉼표(,) But 상품명과 금액 매칭이 어려움!
+# list = finds_visible(
+#     "table.tbl_list > tbody > tr[class^=productList_] td[class=title_price] p[class=subject], table.tbl_list > tbody > tr[class^=productList_] td[class=rig_line] span[class=prod_price]")
+
+# 따로 가져오는 방법
+# name = finds_visible("table.tbl_list > tbody > tr[class^=productList_] td[class=title_price] p[class=subject]")
+# price = finds_visible("table.tbl_list > tbody > tr[class^=productList_] td[class=rig_line] p")
+
+# 공통 노드에서 분기 시켜서 가져오는 방법
+# 판매중지 항목을 포함하고 싶은 경우!
+# products = finds_visible("table.tbl_list > tbody > tr[class^=productList_]")
+# for i in products :
+#     name = i.find_element(By.CSS_SELECTOR, "td[class=title_price] p[class=subject]").text
+#     price = i.find_element(By.CSS_SELECTOR, "td[class=rig_line] p").text    # 판매중지 때문에 span 태그 활용이 어려워 p 태그 이용
+#     print(name + "   " + price)
+# 판매중지 항목 미포함
+# products = finds_visible("table.tbl_list > tbody > tr[class^=productList_]")
+# cpu_list = []   # 항목을 가져와 별도로 담을 리스트
+# for i in products :
+#     name = i.find_element(By.CSS_SELECTOR, "td[class=title_price] p[class=subject]").text
+#     try :
+#         price = i.find_element(By.CSS_SELECTOR, "td[class=rig_line] span[class=prod_price]").text
+#     except :
+#         continue
+#     # print(name + "   " + price)
+#     cpu_list.append((name,price))
+
+# 위 판매중지 항목 미포함을 함수로 구현하여 가져오기
+cpu_list = parse_products()
+
+for cpu in cpu_list :
+    print(cpu)
 
 time.sleep(5)
 
 
 chrome.quit()
-
