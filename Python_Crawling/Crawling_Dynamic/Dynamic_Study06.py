@@ -297,6 +297,16 @@ find_visible(
     # f"#estimateMainSearchOption > div > div.search_option_list > div:nth-child(3) > div.search_cate_contents.open > ul > li:nth-child({i}) > label > span"    # 전체 보기 버튼 추가시 활용
 ).click()
 
+# 용량 선택
+options = finds_visible(
+    f"#estimateMainSearchOption > div > div.search_option_list > div:nth-child(4) > div.search_cate_contents > ul > li")
+    # f"#estimateMainSearchOption > div > div.search_option_list > div:nth-child(3) > div.search_cate_contents.open > ul > li")
+i = choose_one_op("메모리 용량 선택", options)
+find_visible(
+    f"#estimateMainSearchOption > div > div.search_option_list > div:nth-child(4) > div.search_cate_contents > ul > li:nth-child({i}) > label > span"
+    # f"#estimateMainSearchOption > div > div.search_option_list > div:nth-child(3) > div.search_cate_contents.open > ul > li:nth-child({i}) > label > span"    # 전체 보기 버튼 추가시 활용
+).click()
+
 time.sleep(2)
 
 memory_list = parse_products()
@@ -307,7 +317,84 @@ for memory in memory_list:
 
 
 
+# 그래픽카드 선택
+go_to_category("그래픽카드")
+is_NVIDIA = False
+is_AMD = False
 
+# 그래픽카드 제조사 선택
+choose_maker("그래픽카드")
+
+# 칩셋 제조사 선택
+options = finds_visible(
+    f"#estimateMainSearchOption > div > div.search_option_list > div:nth-child(2) > div.search_cate_contents > ul > li")
+# f"#estimateMainSearchOption > div > div.search_option_list > div:nth-child(3) > div.search_cate_contents.open > ul > li")
+i = choose_one_op("칩셋 제조사 선택", options)
+if i == 1:
+    is_NVIDIA = True
+elif i == 2 :
+    is_AMD = True
+find_visible(
+    f"#estimateMainSearchOption > div > div.search_option_list > div:nth-child(2) > div.search_cate_contents > ul > li:nth-child({i}) > label > span"
+    # f"#estimateMainSearchOption > div > div.search_option_list > div:nth-child(3) > div.search_cate_contents.open > ul > li:nth-child({i}) > label > span"    # 전체 보기 버튼 추가시 활용
+).click()
+
+
+# # 제품 시리즈 선택
+# options = finds_visible(
+#     f"#estimateMainSearchOption > div > div.search_option_list > div:nth-child(3) > div.search_cate_contents > ul > li")
+# # f"#estimateMainSearchOption > div > div.search_option_list > div:nth-child(3) > div.search_cate_contents.open > ul > li")
+# i = choose_one_op("제품 시리즈 선택", options)
+# find_visible(
+#     f"#estimateMainSearchOption > div > div.search_option_list > div:nth-child(3) > div.search_cate_contents > ul > li:nth-child({i}) > label > span"
+#     # f"#estimateMainSearchOption > div > div.search_option_list > div:nth-child(3) > div.search_cate_contents.open > ul > li:nth-child({i}) > label > span"    # 전체 보기 버튼 추가시 활용
+# ).click()
+
+# 칩셋 선택
+if is_NVIDIA : 
+    find_visible("#estimateMainSearchOption > div > div.search_option_list > div:nth-child(5) > div.search_cate_contents > button").click()
+    options = finds_visible(
+        f"#estimateMainSearchOption > div > div.search_option_list > div:nth-child(5) > div.search_cate_contents.open > ul > li")
+    i = choose_one_op("NVIDIA 칩셋 선택", options)
+    find_visible(
+        f"#estimateMainSearchOption > div > div.search_option_list > div:nth-child(5) > div.search_cate_contents.open > ul > li:nth-child({i}) > label > span"
+    ).click()
+elif is_AMD:
+    find_visible("#estimateMainSearchOption > div > div.search_option_list > div:nth-child(6) > div.search_cate_contents > button").click()
+    options = finds_visible(
+        f"#estimateMainSearchOption > div > div.search_option_list > div:nth-child(6) > div.search_cate_contents.open > ul > li")
+    i = choose_one_op("AMD 칩셋 선택", options)
+    find_visible(
+        f"#estimateMainSearchOption > div > div.search_option_list > div:nth-child(6) > div.search_cate_contents.open > ul > li:nth-child({i}) > label > span"
+    ).click()
+
+time.sleep(3)
+
+graphic_list = parse_products()
+
+for graphic in graphic_list:
+    print(graphic)
+
+
+# SSD
+go_to_category("SSD")
+
+choose_maker("SSD")
+
+# 용량 선택
+options = finds_visible("#estimateMainSearchOption > div > div.search_option_list > div:nth-child(5) > div.search_cate_contents > ul > li")
+i = choose_one_op("SSD 용량 선택", options)
+find_visible("#estimateMainSearchOption > div > div.search_option_list > div:nth-child(5) > div.search_cate_contents > button").click()
+find_visible(
+    f"#estimateMainSearchOption > div > div.search_option_list > div:nth-child(5) > div.search_cate_contents.open > ul > li:nth-child({i}) > label > span"
+).click()
+
+time.sleep(2)
+
+memory_list = parse_products()
+
+for memory in memory_list:
+    print(memory)
 
 time.sleep(5)
 
