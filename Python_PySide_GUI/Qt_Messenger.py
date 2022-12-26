@@ -15,18 +15,18 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QLabel, QLineEdit, QListView,
-    QMainWindow, QPushButton, QSizePolicy, QTextEdit,
+from PySide6.QtWidgets import (QApplication, QLabel, QLineEdit, QListWidget,
+    QListWidgetItem, QMainWindow, QPushButton, QSizePolicy,
     QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(382, 601)
+        MainWindow.resize(382, 513)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
-        self.list_chat = QListView(self.centralwidget)
+        self.list_chat = QListWidget(self.centralwidget)
         self.list_chat.setObjectName(u"list_chat")
         self.list_chat.setGeometry(QRect(10, 10, 361, 411))
         self.label = QLabel(self.centralwidget)
@@ -45,13 +45,13 @@ class Ui_MainWindow(object):
         self.edit_nickname = QLineEdit(self.centralwidget)
         self.edit_nickname.setObjectName(u"edit_nickname")
         self.edit_nickname.setGeometry(QRect(10, 450, 121, 22))
-        self.edit_text = QTextEdit(self.centralwidget)
-        self.edit_text.setObjectName(u"edit_text")
-        self.edit_text.setGeometry(QRect(150, 450, 221, 111))
         self.btn_send = QPushButton(self.centralwidget)
         self.btn_send.setObjectName(u"btn_send")
-        self.btn_send.setGeometry(QRect(10, 570, 361, 24))
+        self.btn_send.setGeometry(QRect(10, 480, 361, 24))
         self.btn_send.setFont(font)
+        self.edit_text = QLineEdit(self.centralwidget)
+        self.edit_text.setObjectName(u"edit_text")
+        self.edit_text.setGeometry(QRect(150, 450, 221, 22))
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)

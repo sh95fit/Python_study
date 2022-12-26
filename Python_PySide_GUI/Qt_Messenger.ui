@@ -7,14 +7,14 @@
     <x>0</x>
     <y>0</y>
     <width>382</width>
-    <height>601</height>
+    <height>513</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Hun's_Messenger</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QListView" name="list_chat">
+   <widget class="QListWidget" name="list_chat">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -78,21 +78,11 @@
      </rect>
     </property>
    </widget>
-   <widget class="QTextEdit" name="edit_text">
-    <property name="geometry">
-     <rect>
-      <x>150</x>
-      <y>450</y>
-      <width>221</width>
-      <height>111</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QPushButton" name="btn_send">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>570</y>
+      <y>480</y>
       <width>361</width>
       <height>24</height>
      </rect>
@@ -105,6 +95,16 @@
     </property>
     <property name="text">
      <string>전송</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="edit_text">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>450</y>
+      <width>221</width>
+      <height>22</height>
+     </rect>
     </property>
    </widget>
   </widget>
