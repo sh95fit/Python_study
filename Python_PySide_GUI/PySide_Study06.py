@@ -12,7 +12,7 @@ READ 영역을 먼저 구현해놓으면 CREATE 작업 시 잘 되고 있는지 
 import sys
 import datetime
 
-from PySide6.QtWidgets import QMainWindow, QApplication, QTableWidgetItem
+from PySide6.QtWidgets import QMainWindow, QApplication, QTableWidgetItem, QMessageBox
 
 from PySide6.QtCore import QTimer
 
@@ -47,6 +47,10 @@ size_widgets = [
 
 
 class MainWindow(QMainWindow) :
+    # valueChange 무한 루프를 제한하기 위함
+    quantity_lock = False
+
+
     def __init__(self) :
         super(MainWindow, self).__init__()
         self.ui = Ui_MainWindow()
@@ -67,6 +71,17 @@ class MainWindow(QMainWindow) :
         # 시작 될때 총 금액이 1회 계산
         self.calc()
 
+        # 싱크를 맞춘 수량을 호출 (4가지 경우에 대한 valueChanged를 하게 되는 경우 무한 루프에 빠진다 valueChange가 한번만 일어나도록 lock으로 조치 필요!)
+        self.ui.spin_quantity.valueChanged.connect(self.sync_quantity)
+        self.ui.hs_quantity.valueChanged.connect(self.sync_quantity)
+        self.ui.vs_quantity.valueChanged.connect(self.sync_quantity)
+        self.ui.dial_quantity.valueChanged.connect(self.sync_quantity)
+
+        self.ui.btn_order.clicked.connect(self.order)
+
+        # 더블 클릭으로 상태 전환
+        self.ui.table_orders.cellDoubleClicked.connect(self.change_order)
+
     # 현재 시각 
     def tick(self) :
         now = datetime.datetime.now()
@@ -76,6 +91,8 @@ class MainWindow(QMainWindow) :
     # 주문 내역 불러오기
     # 테이블에 데이터 표시를 위해 QTableWidgetItem 활용
     def load(self) :
+        self.ui.table_orders.setRowCount(0)
+
         for d in orders :
             r = self.ui.table_orders.rowCount() # 마지막 줄의 기준
             self.ui.table_orders.insertRow(r)   # 마지막 줄에 row 추가
@@ -132,6 +149,80 @@ class MainWindow(QMainWindow) :
         self.ui.lb_order_amount.setText(f"총 주문 금액 : {price}원")
         
         return price
+    
+    def sync_quantity(self) :
+        # valueChange 무한 루프를 제한하기 위함
+        if self.quantity_lock :
+            return
+        
+        # 문 열고 실행
+        self.quantity_lock = True
+
+        spin = self.ui.spin_quantity
+        hs = self.ui.hs_quantity
+        vs = self.ui.vs_quantity
+        dial = self.ui.dial_quantity
+
+        # 4개의 값 중 다른 값에 맞춰 값이 변경되도록 구현
+        values = [spin.value(), hs.value(), vs.value(), dial.value()]
+        # 중복 검사 방법 - 원소의 갯수를 세서 1개가 나온 값을 찾아 해당 값으로 변경
+        dup = {}
+        target = 0
+        for v in values :
+            dup[v] = dup.get(v, 0) + 1  # 처음에는 딕셔너리가 비어있으므로 .get(v, 0)로 값을 가져옴 (v를 불러오고 없으면 0 표시)
+        for k, v in dup.items() :
+            if v == 1 :
+                target = k
+        
+        spin.setValue(target)
+        hs.setValue(target)
+        vs.setValue(target)
+        dial.setValue(target)
+
+        self.calc()
+
+        # 문 닫고 종료
+        self.quantity_lock = False
+
+
+    def order(self) :
+        menu = ""
+        for w in menu_widgets :
+            radio = getattr(self.ui, w)
+            if radio.isChecked() :
+                menu = radio.text()
+                break
+        
+        for w in size_widgets :
+            radio = getattr(self.ui, w)
+            if radio.isChecked() :
+                menu += " " + radio.text()
+                break
+
+        quantity = self.ui.spin_quantity.value()
+
+        order = {
+            "menu" : menu,
+            "quantity" : str(quantity),
+            "order_amount" : str(self.calc()),
+            "time" : str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")),
+            "status" : "waiting",
+        }
+
+        orders.append(order)
+
+        mb = QMessageBox()
+        mb.setText("발주되었습니다.")
+        mb.exec()
+
+        self.load()
+
+    def change_order(self, r, c) :
+        # waiting -> processing -> delivery -> done
+        status = ["waiting", "processing", "delivery", "done", "done"]      # 인덱스는 처음 찾는 것의 위치값을 가져오기 때문에 done을 2개 넣어 범위가 넘어가는 것을 방지
+        orders[r]["status"] = status[status.index(orders[r]["status"]) + 1]
+        
+        self.load()
 
 
 if __name__ == "__main__" :
