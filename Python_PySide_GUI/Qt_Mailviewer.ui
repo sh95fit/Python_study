@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1035</width>
+    <width>1277</width>
     <height>521</height>
    </rect>
   </property>
@@ -40,7 +40,7 @@
     </column>
     <column>
      <property name="text">
-      <string>첨부파일</string>
+      <string>상태</string>
      </property>
     </column>
     <column>
@@ -54,7 +54,7 @@
      <rect>
       <x>740</x>
       <y>30</y>
-      <width>50</width>
+      <width>521</width>
       <height>16</height>
      </rect>
     </property>
@@ -67,7 +67,7 @@
      <rect>
       <x>740</x>
       <y>60</y>
-      <width>281</width>
+      <width>521</width>
       <height>441</height>
      </rect>
     </property>

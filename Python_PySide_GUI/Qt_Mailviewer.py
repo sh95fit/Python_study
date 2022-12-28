@@ -22,7 +22,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1035, 521)
+        MainWindow.resize(1277, 521)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.table = QTableWidget(self.centralwidget)
@@ -42,10 +42,10 @@ class Ui_MainWindow(object):
         self.table.setGeometry(QRect(10, 20, 711, 481))
         self.lb_title = QLabel(self.centralwidget)
         self.lb_title.setObjectName(u"lb_title")
-        self.lb_title.setGeometry(QRect(740, 30, 50, 16))
+        self.lb_title.setGeometry(QRect(740, 30, 521, 16))
         self.lb_content = QLabel(self.centralwidget)
         self.lb_content.setObjectName(u"lb_content")
-        self.lb_content.setGeometry(QRect(740, 60, 281, 441))
+        self.lb_content.setGeometry(QRect(740, 60, 521, 441))
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -62,7 +62,7 @@ class Ui_MainWindow(object):
         ___qtablewidgetitem2 = self.table.horizontalHeaderItem(2)
         ___qtablewidgetitem2.setText(QCoreApplication.translate("MainWindow", u"\ubcf4\ub0b8\uc774", None));
         ___qtablewidgetitem3 = self.table.horizontalHeaderItem(3)
-        ___qtablewidgetitem3.setText(QCoreApplication.translate("MainWindow", u"\ucca8\ubd80\ud30c\uc77c", None));
+        ___qtablewidgetitem3.setText(QCoreApplication.translate("MainWindow", u"\uc0c1\ud0dc", None));
         ___qtablewidgetitem4 = self.table.horizontalHeaderItem(4)
         ___qtablewidgetitem4.setText(QCoreApplication.translate("MainWindow", u"\uc81c\ubaa9", None));
         self.lb_title.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
