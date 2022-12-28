@@ -13,19 +13,37 @@ from PySide6.QtWidgets import QMainWindow, QApplication
 
 from Qt_Mailviewer import Ui_MainWindow
 
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+
+import pyperclip
+
+def find(chrome, css_selector) :
+    wait = WebDriverWait(chrome, 5)
+    return wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, css_selector)))
+
 class MainWindow(QMainWindow) :
     def __init__(self) :
         super(MainWindow, self).__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-    
+        # Selenium 띄우기 테스트
+        chrome = webdriver.Chrome("./Python_PySide_GUI/chromedriver.exe")
+
+        # naver mail 로그인
+        chrome.get("https://mail.naver.com")
+        input_id = find(chrome, "#id")
+        print(input_id)
 
 
 if __name__ == "__main__" :
     app = QApplication()
 
     window = MainWindow()
-    window.show
+    window.show()
 
     sys.exit(app.exec())
