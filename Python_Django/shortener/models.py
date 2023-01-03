@@ -25,7 +25,8 @@ class PayPlan(models.Model):
 # settings.py에 AUTH_USER_MODEL = "shortener.Users" 추가
 # 유저 테이블이 상속 받으면서 기존 유저 테이블이 쓸모가 없어지므로 인증을 위해 어떤 유저 모델을 쓸지 정의해주어야 함
 class Users(AbstractUser):
-    pay_plan = models.ForeignKey(PayPlan, on_delete=models.DO_NOTHING)
+    pay_plan = models.ForeignKey(
+        PayPlan, on_delete=models.DO_NOTHING, null=True)    # null = True를 붙여주지 않으면 계정 생성 시 django.db.utils.IntegrityError: NOT NULL constraint failed 에러 발생
 
 
 # UserDetail 클래스 만들기 (두 개의 테이블로 나누어 쓸 때 활용)
