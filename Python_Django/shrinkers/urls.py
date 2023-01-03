@@ -15,10 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from shortener.views import index, redirect_test
+# from shortener.views import index, redirect_test, get_user
+from shortener.views import index, get_user
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index, name='index_1'),
-    path('redirect', redirect_test),
+    # path('redirect', redirect_test),
+
+    # 여기서 입력된 user_id와 함께 get_user 함수 실행
+    path("get_user/<int:user_id>", get_user),
 ]

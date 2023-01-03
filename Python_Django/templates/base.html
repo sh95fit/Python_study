@@ -5,6 +5,14 @@
     <title>Hun's Django</title>
   </head>
   <body>
-    {{ welcome_msg }} {{ email }}
+    {% comment %} {{ welcome_msg }} {{ email }} {% endcomment %} <br />
+    {{ user }} <br />
+
+    {% for i in params %} {{i}} <br />
+    <!--for문의 끝맺음을 해주지 않으면 에러가 발생!-->
+    {% endfor %} <br />
+
+    {% comment %} 문법 활용 형태 예시 {% endcomment %} <br />
+    {% if user == "a" %} {% endif %}
   </body>
 </html>
