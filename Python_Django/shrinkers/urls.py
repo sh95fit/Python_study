@@ -21,7 +21,8 @@ from shortener.views import index, get_user
 from shortener.views import register
 # debug_toolbar 추가
 import debug_toolbar
-
+# 로그인, 로그아웃 관련 추가
+from shortener.views import login_view, logout_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -37,4 +38,8 @@ urlpatterns = [
     # 회원가입 관련 (/register로 이동하면 회원가입을 할 수 있도록 해줌!)
     # 단일로 하는 경우 뒤에 /를 포함핮 않아도 된다! 이후에 추가할 경로가 있는경우 붙여줘야함!
     path("register", register, name="register"),
+
+    # 로그인, 로그아웃 경로 추가
+    path("login", login_view, name="login"),
+    path("logout", logout_view, name="logout"),
 ]

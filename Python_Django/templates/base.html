@@ -5,20 +5,20 @@
     <title>Hun's Django</title>
   </head>
   <body>
-    {{ user }}
-    <br />
+    {{ user }} <br />
     {% for i in params %} {{i}} <br />
-    {% endfor %}
-    <a href="{% url 'register' %}">회원가입</a>
-
-    {% comment %} {{ welcome_msg }} {{ email }} <br />
+    {% endfor %} {% if user.is_authenticated %}
+    <p><a href="{% url 'logout' %}">로그아웃</a></p>
+    {% else %}
+    <p><a href="{% url 'register' %}">회원가입</a></p>
+    <p><a href="{% url 'login' %}">로그인</a></p>
+    {% endif %} {% comment %} {{ welcome_msg }} {{ email }} <br />
     {{ user }} <br />
 
     {% for i in params %} {{i}} <br />
     <!--for문의 끝맺음을 해주지 않으면 에러가 발생!-->
     {% endfor %} <br />
-
-    {% comment %} 문법 활용 형태 예시 <br />
+    {% endcomment %} {% comment %} 문법 활용 형태 예시 <br />
     {% comment %} {% if user == "a" %} {% endif %} {% endcomment %}
   </body>
 </html>

@@ -4,8 +4,9 @@ from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 # Forms로 작성한 등록 양식 추가
 from shortener.forms import RegisterForm
-# 로그인, 인증 관련 모듈 추가
-from django.contrib.auth import login, authenticate
+# 로그인, 인증, 로그아웃 관련 모듈 추가
+from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.forms import AuthenticationForm
 
 # Create your views here.
 
@@ -64,3 +65,28 @@ def register(request):
     else:
         form = RegisterForm()
         return render(request, "register.html", {"form": form})
+
+
+# 로그인 관련 추가
+def login_view(request):
+    if request.method == "POST":
+        form = AuthenticationForm(request, request.POST)
+        msg = "가입되어 있지 않거나 로그인 정보가 잘못 되었습니다."
+        print(form.is_valid)
+        if form.is_valid():
+            username = form.cleaned_data.get("username")
+            raw_password = form.cleaned_data.get("password")
+            user = authenticate(username=username, password=raw_password)
+            if user is not None:
+                msg = "로그인 성공"
+                login(request, user)
+        return render(request, "login.html", {"form": form, "msg": msg})
+    else:
+        form = AuthenticationForm()
+        return render(request, "login.html", {"form": form})
+
+
+# 로그아웃 관련 추가
+def logout_view(request):
+    logout(request)
+    return redirect("index_1")
