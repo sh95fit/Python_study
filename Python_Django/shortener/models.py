@@ -29,10 +29,10 @@ class Users(AbstractUser):
         PayPlan, on_delete=models.DO_NOTHING, null=True)    # null = True를 붙여주지 않으면 계정 생성 시 django.db.utils.IntegrityError: NOT NULL constraint failed 에러 발생
 
 
-# UserDetail 클래스 만들기 (두 개의 테이블로 나누어 쓸 때 활용)
-class UserDetail(models.Model):
-    # AbstractUser과 함께 사용할 시 해당 클래스를 반영해주어야 한다
-    user = models.OneToOneField(Users, on_delete=models.CASCADE)
-    # 기존
-    # user = models.OneToOneField(U, on_delete=models.CASCADE)
-    pay_plan = models.ForeignKey(PayPlan, on_delete=models.DO_NOTHING)
+# # UserDetail 클래스 만들기 (두 개의 테이블로 나누어 쓸 때 활용)
+# class UserDetail(models.Model):
+#     # AbstractUser과 함께 사용할 시 해당 클래스를 반영해주어야 한다
+#     user = models.OneToOneField(Users, on_delete=models.CASCADE)
+#     # 기존
+#     # user = models.OneToOneField(U, on_delete=models.CASCADE)
+#     pay_plan = models.ForeignKey(PayPlan, on_delete=models.DO_NOTHING)

@@ -7,15 +7,18 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 def index(request):  # request는 항상 써야한다! 미들웨어에서 request를 명시적으로 전달해주고 있기 때문!
-    user = Users.objects.filter(username="admin").first()
+    print(request.user)
+    print(request.user.pay_plan)
+    print(request.user.is_superuser)
+    # user = Users.objects.filter(username="admin").first()
     # get을 이용해 user를 특정할 수 있음! 대신 get은 1개만 존재하는 것에 한해서 가져올 수 있음!
+    user = Users.objects.filter(id=request.user.id).first()
     # user = Users.objects.get(username="admin")
     email = user.email if user else "Anonymous User!"
-    print(email)
-    print(request.user.is_authenticated)
+    print("Logged in?", request.user.is_authenticated)
     if request.user.is_authenticated is False:
         email = "Anonymous User!"
-        print(email)
+    print(email)
     return render(request, "base.html", {"welcome_msg": "Hello Django Server!", "email": f"{email}"})
 
 
