@@ -17,8 +17,11 @@ from django.contrib import admin
 from django.urls import path, include
 # from shortener.views import index, redirect_test, get_user
 from shortener.views import index, get_user
+# 회원가입 관련 추가
+from shortener.views import register
 # debug_toolbar 추가
 import debug_toolbar
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,4 +33,8 @@ urlpatterns = [
 
     # Django Debug Toolbar 경로 설정
     path("__debug__/", include(debug_toolbar.urls)),
+
+    # 회원가입 관련 (/register로 이동하면 회원가입을 할 수 있도록 해줌!)
+    # 단일로 하는 경우 뒤에 /를 포함핮 않아도 된다! 이후에 추가할 경로가 있는경우 붙여줘야함!
+    path("register", register, name="register"),
 ]
