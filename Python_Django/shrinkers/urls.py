@@ -23,6 +23,9 @@ from shortener.views import register
 import debug_toolbar
 # 로그인, 로그아웃 관련 추가
 from shortener.views import login_view, logout_view
+# 게시판 관련 추가
+from shortener.views import list_view
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -42,4 +45,7 @@ urlpatterns = [
     # 로그인, 로그아웃 경로 추가
     path("login", login_view, name="login"),
     path("logout", logout_view, name="logout"),
+
+    # 게시판 경로 추가
+    path("list", list_view, name="list_view"),
 ]

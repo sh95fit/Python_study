@@ -7,6 +7,12 @@ from shortener.forms import RegisterForm
 # 로그인, 인증, 로그아웃 관련 모듈 추가
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
+# 패스워드 초기화, 변경 관련 모듈 추가
+from django.contrib.auth.forms import PasswordResetForm, PasswordChangeForm
+# Paginator 추가
+from django.core.paginator import Paginator
+# login 상태 요구 모듈 추가(로그인된 경우만 확인 가능한 페이지 구현)
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -72,7 +78,7 @@ def login_view(request):
     if request.method == "POST":
         form = AuthenticationForm(request, request.POST)
         msg = "가입되어 있지 않거나 로그인 정보가 잘못 되었습니다."
-        print(form.is_valid)
+        # print(form.is_valid)
         if form.is_valid():
             username = form.cleaned_data.get("username")
             raw_password = form.cleaned_data.get("password")
@@ -90,3 +96,15 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect("index_1")
+
+
+# 게시판 관련 추가
+@login_required
+def list_view(request):
+    page = int(request.GET.get("p", 1))
+    # 유저 쿼리 - 유저 테이블을 select + order by (id 역순(- 포함))
+    users = Users.objects.all().order_by("-id")
+    paginator = Paginator(users, 10)    # Paginator(쿼리, 한페이지에 몇개씩 보여줄건지 정하는 개수)
+    users = paginator.get_page(page)
+
+    return render(request, "boards.html", {"users": users})
