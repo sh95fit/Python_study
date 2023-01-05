@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load custom_tags %}
 {% block content %}
 	<h2>유저 리스트</h2>
     <h4>{% if msg %} {{ msg }} {% endif %}</h4>
@@ -15,7 +16,7 @@
       <tr class = {% cycle "table-ligth" "table-primary" %}>
         <td>{{ u.id }}</td>
         <td>{{ u.username }}</td>
-        <td>{{ u.email }}</td>
+        <td>{{ u.email | email_ma:u.id }}</td>
         <td>{{ u.date_joined }}</td>
         <td>{{ u.pay_plan.name }}</td>
         <td>{{ u.pay_plan.price }}</td>
@@ -51,5 +52,6 @@
       <a href="{% url 'index_1' %}"> 홈으로</a>
       <a href="{% url 'register' %}">회원가입</a>
     </p>
+		{% test_tags %}
 		{% include 'load.html' %}
 {% endblock %}
