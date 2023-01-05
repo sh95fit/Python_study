@@ -2,12 +2,20 @@
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"
     <title>Hun's Django</title>
+
+    {% comment %} 부트스트랩 활용 {% endcomment %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD" crossorigin="anonymous"></script>
+
   </head>
   <body>
     <h2>유저 리스트</h2>
     <h4>{% if msg %} {{ msg }} {% endif %}</h4>
-    <table>
+    <table class="table table-dark table-striped nowrap text-center font-size-12">
       <thead>
         <th>ID</th>
         <th>유저이름</th>
@@ -27,27 +35,27 @@
       </tr>
       {% endfor %} {% if users|length == 0 %} 데이터가 없습니다. {% endif %}
     </table>
-    <nav>
-      <ul>
+    <nav aria-label = "...">
+      <ul class ="pagination justify-content-center">
         {% if users.has_previous %}
-        <li>
-          <a href="?p={{users.previous_page_number}}">이전으로</a>
+        <li class="page-item active" aria-current="page">
+          <a class="page-link" href="?p={{users.previous_page_number}}">이전으로</a>
         </li>
         {% else %}
-        <li>
-          <a href="#">이전으로</a>
+        <li class="page-item active" aria-current="page">
+          <a class="page-link" href="#">이전으로</a>
         </li>
         {% endif %}
-        <li>
-          <a href="#">{{users.number}}/{{users.paginator.num_pages}}</a>
+        <li class="page-item">
+          <a class="page-link" href="#">{{users.number}}/{{users.paginator.num_pages}}</a>
         </li>
         {% if users.has_next %}
-        <li>
-          <a href="?p={{users.next_page_number}}">다음으로</a>
+        <li class="page-item active" aria-current="page">
+          <a class="page-link" href="?p={{users.next_page_number}}">다음으로</a>
         </li>
         {% else %}
-        <li>
-          <a href="#">다음으로</a>
+        <li class="page-item active" aria-current="page">
+          <a class="page-link" href="#">다음으로</a>
         </li>
         {% endif %}
       </ul>
