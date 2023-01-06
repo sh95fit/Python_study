@@ -52,14 +52,29 @@
       rel="stylesheet"
       href="{% static 'assets/vendor/sweetalert2/dist/sweetalert2.min.css' %}"
     />
+
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+
     <!-- Argon CSS -->
     <link
       rel="stylesheet"
       href="{% static 'css/dashboard.css' %}"
       type="text/css"
+      .
     />
-  </head>
-    />
+
+    <!-- Core -->
+    <script src="{% static 'assets/vendor/jquery/dist/jquery.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/js-cookie/js.cookie.js' %}"></script>
+    <script src="{% static 'assets/vendor/jquery.scrollbar/jquery.scrollbar.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/jquery-scroll-lock/dist/jquery-scrollLock.min.js' %}"></script>
+    <!-- Optional JS -->
+    <script src="{% static 'assets/vendor/chart.js/dist/Chart.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/chart.js/dist/Chart.extension.js' %}"></script>
   </head>
 
   <body>
@@ -68,7 +83,6 @@
     <div class="main-content" id="panel">
       <!-- Topnav -->
       {% include 'includes/top_nav.html' %}
-      <!-- Header -->
       <!-- Header -->
       <div class="header bg-primary pb-6">
         <div class="container-fluid">
@@ -103,6 +117,7 @@
         {% block content %} {% endblock %}
       </div>
     </div>
+    {% comment %}
     <!-- Argon Scripts -->
     <!-- Core -->
     <script src="{% static 'assets/vendor/jquery/dist/jquery.min.js' %}"></script>
@@ -113,6 +128,7 @@
     <!-- Optional JS -->
     <script src="{% static 'assets/vendor/chart.js/dist/Chart.min.js' %}"></script>
     <script src="{% static 'assets/vendor/chart.js/dist/Chart.extension.js' %}"></script>
+    {% endcomment %}
     <!-- Argon JS -->
     <script src="{% static 'assets/js/dashboard.js' %}?v=1.2.0"></script>
     <!-- Demo JS - remove this in your project -->

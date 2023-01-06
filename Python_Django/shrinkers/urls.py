@@ -27,6 +27,9 @@ from shortener.views import login_view, logout_view
 from shortener.views import list_view
 # url_list 추가
 from shortener.views import url_list
+# url_create, url_change 추가
+from shortener.views import url_create, url_change
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -51,5 +54,10 @@ urlpatterns = [
     path("list", list_view, name="list_view"),
 
     # url_list 추가
-    path("url_list", url_list, name="url_list"),
+    # path("url_list", url_list, name="url_list"),
+
+    # url 관련 경로 추가
+    path("urls", url_list, name="url_list"),
+    path("urls/create", url_create, name="url_create"),
+    path("urls/<str:action>/<int:url_id>", url_change, name="url_change"),
 ]

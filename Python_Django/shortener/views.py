@@ -15,6 +15,12 @@ from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 # 로그인 폼 수정(이메일 로그인 + 로그인 유지)
 from shortener.forms import LoginForm
+# ShortenedUrls 추가
+from shortener.models import ShortenedUrls
+# UrlCreateForm 폼 추가
+from shortener.forms import UrlCreateForm
+# message 관련 모듈 추가
+from django.contrib import messages
 
 
 # Create your views here.
@@ -36,10 +42,58 @@ def index(request):  # request는 항상 써야한다! 미들웨어에서 reques
 
 
 def url_list(request):
-    return render(
-        request,
-        "url_list.html",
-    )
+    # return render(
+    #     request,
+    #     "url_list.html",
+    # )
+    get_list = ShortenedUrls.objects.order_by("-created_at").all()
+    return render(request, "url_list.html", {"list": get_list})
+
+
+@login_required
+def url_create(request):
+    msg = None
+    if request.method == "POST":
+        form = UrlCreateForm(request.POST)
+        if form.is_valid():
+            msg = f"{form.cleaned_data.get('nick_name')} 생성 완료!"
+            messages.add_message(request, messages.INFO, msg)
+            form.save(request)
+            return redirect("url_list")
+        else:
+            form = UrlCreateForm()
+    else:
+        form = UrlCreateForm()
+    return render(request, "url_create.html", {"form": form})
+
+
+@login_required
+def url_change(request, action, url_id):
+    if request.method == "POST":
+        url_data = ShortenedUrls.objects.filter(id=url_id)
+        if url_data.exists():
+            if url_data.first().created_by_id != request.user.id:
+                msg = "자신이 소유하지 않은 URL 입니다."
+            else:
+                if action == "delete":
+                    msg = f"{url_data.first().nick_name} 삭제 완료!"
+                    url_data.delete()
+                    messages.add_message(request, messages.INFO, msg)
+                elif action == "update":
+                    msg = f"{url_data.first().nick_name} 수정 완료!"
+                    form = UrlCreateForm(request.POST)
+                    form.update_form(request, url_id)
+
+                    messages.add_message(request, messages.INFO, msg)
+        else:
+            msg = "해당 URL 정보를 찾을 수 없습니다."
+
+    elif request.method == "GET" and action == "update":
+        url_data = ShortenedUrls.objects.filter(pk=url_id).first()
+        form = UrlCreateForm(instance=url_data)
+        return render(request, "url_create.html", {"form": form, "is_update": True})
+
+    return redirect("url_list")
 
 
 # 리다이렉트 활용 - 유저가 로그인해야만 볼 수 있는 페이지로 접근, 권한 없이 admin 페이지 접근 등

@@ -1,4 +1,3 @@
-
 # 가상환경의 경우 python 경로를 default로 python이 설치된 directory를 잡고 있어서 python 경로를 잡아주지 못해 경고가 발생한다!
 # 가상환경의 인터프리터로 설정해주어야 함! venv\Scripts\python.exe
 from django.db import models
@@ -7,6 +6,11 @@ from django.db import models
 from django.contrib.auth.models import User as U
 # AbstractUser를 설정할 때 사용!
 from django.contrib.auth.models import AbstractUser
+
+
+# 게시판 만들기 관련
+import string
+import random
 
 
 # Create your models here.
@@ -37,3 +41,22 @@ class Users(AbstractUser):
 #     # 기존
 #     # user = models.OneToOneField(U, on_delete=models.CASCADE)
 #     pay_plan = models.ForeignKey(PayPlan, on_delete=models.DO_NOTHING)
+
+
+class ShortenedUrls(models.Model):
+    class UrlCreateVia(models.TextChoices):
+        WEBSITE = "web"
+        TELEGRAM = "telegram"
+
+    def rand_string():
+        str_pool = string.digits + string.ascii_letters
+        return ("".join([random.choice(str_pool) for _ in range(6)])).lower()
+
+    nick_name = models.CharField(max_length=100)
+    created_by = models.ForeignKey(Users, on_delete=models.CASCADE)
+    target_url = models.CharField(max_length=2000)
+    shortened_url = models.CharField(max_length=6, default=rand_string)
+    created_via = models.CharField(
+        max_length=8, choices=UrlCreateVia.choices, default=UrlCreateVia.WEBSITE)
+    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
