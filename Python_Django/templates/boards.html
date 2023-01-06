@@ -16,7 +16,8 @@
       <tr class = {% cycle "table-ligth" "table-primary" %}>
         <td>{{ u.id }}</td>
         <td>{{ u.username }}</td>
-        <td>{{ u.email | email_ma:u.id }}</td>
+        <td>{{ u.email | email_ma }}</td>
+        {% comment %} <td>{{ u.email | email_ma:u.id }}</td> {% endcomment %}
         <td>{{ u.date_joined }}</td>
         <td>{{ u.pay_plan.name }}</td>
         <td>{{ u.pay_plan.price }}</td>

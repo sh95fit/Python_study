@@ -75,21 +75,34 @@ def register(request):
 
 # 로그인 관련 추가
 def login_view(request):
+    msg = None
+    # 로그인 정상 수행 확인용 변수
+    is_ok = False
     if request.method == "POST":
         form = AuthenticationForm(request, request.POST)
-        msg = "가입되어 있지 않거나 로그인 정보가 잘못 되었습니다."
+        # msg = "가입되어 있지 않거나 로그인 정보가 잘못 되었습니다."
         # print(form.is_valid)
         if form.is_valid():
             username = form.cleaned_data.get("username")
             raw_password = form.cleaned_data.get("password")
             user = authenticate(username=username, password=raw_password)
             if user is not None:
-                msg = "로그인 성공"
+                # msg = "로그인 성공"
                 login(request, user)
-        return render(request, "login.html", {"form": form, "msg": msg})
+        # return render(request, "login.html", {"form": form, "msg": msg})
+                is_ok = True
+        else:
+            msg = "올바른 유저ID와 패스워드를 입력하세요."
     else:
         form = AuthenticationForm()
-        return render(request, "login.html", {"form": form})
+        # return render(request, "login.html", {"form": form})
+
+    # 보이는 field가 어떤 것들이 있는지 반환해주는 함수
+    for visible in form.visible_fields():
+        # form의 field에도 클래스를 입혀 디자인 적용
+        visible.field.widget.attrs["placeholder"] = "유저ID" if visible.name == "username" else "패스워드"
+        visible.field.widget.attrs["class"] = "form-control"
+    return render(request, "login.html", {"form": form, "msg": msg, "is_ok": is_ok})
 
 
 # 로그아웃 관련 추가

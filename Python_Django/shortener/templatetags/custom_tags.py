@@ -8,11 +8,11 @@ register = template.Library()
 
 
 @register.filter(name="email_ma")
-# def email_masker(value):
-def email_masker(value, arg):
+def email_masker(value):
+    # def email_masker(value, arg):
     email_split = value.split("@")
-    # return f"{email_split[0]}@******.***"
-    return f"{email_split[0]}@******.***" if arg % 2 == 0 else value
+    return f"{email_split[0]}@******.***"
+    # return f"{email_split[0]}@******.***" if arg % 2 == 0 else value
 
 
 @register.simple_tag(name="test_tags", takes_context=True)
