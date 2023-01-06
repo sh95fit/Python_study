@@ -13,6 +13,8 @@ from django.contrib.auth.forms import PasswordResetForm, PasswordChangeForm
 from django.core.paginator import Paginator
 # login 상태 요구 모듈 추가(로그인된 경우만 확인 가능한 페이지 구현)
 from django.contrib.auth.decorators import login_required
+# 로그인 폼 수정(이메일 로그인 + 로그인 유지)
+from shortener.forms import LoginForm
 
 # Create your views here.
 
@@ -75,40 +77,63 @@ def register(request):
 
 # 로그인 관련 추가
 def login_view(request):
-    msg = None
+    # msg = None
     # 로그인 정상 수행 확인용 변수
     is_ok = False
     if request.method == "POST":
-        form = AuthenticationForm(request, request.POST)
+        # form = AuthenticationForm(request, request.POST)
+        form = LoginForm(request.POST)
         # msg = "가입되어 있지 않거나 로그인 정보가 잘못 되었습니다."
         # print(form.is_valid)
         if form.is_valid():
-            username = form.cleaned_data.get("username")
+            # username = form.cleaned_data.get("username")
+            email = form.cleaned_data.get("email")
             raw_password = form.cleaned_data.get("password")
-            user = authenticate(username=username, password=raw_password)
-            if user is not None:
-                # msg = "로그인 성공"
-                login(request, user)
-        # return render(request, "login.html", {"form": form, "msg": msg})
-                is_ok = True
-        else:
+            # user = authenticate(username=username, password=raw_password)
+        #     if user is not None:
+        #         # msg = "로그인 성공"
+        #         login(request, user)
+        # # return render(request, "login.html", {"form": form, "msg": msg})
+        #         is_ok = True
+        # else:
+            remember_me = form.cleaned_data.get("remember_me")
             msg = "올바른 유저ID와 패스워드를 입력하세요."
-    else:
-        form = AuthenticationForm()
-        # return render(request, "login.html", {"form": form})
+            try:
+                user = Users.objects.get(email=email)
+            except Users.DoesNotExist:
+                pass
+                # msg = "올바른 유저ID와 패스워드를 입력하세요."
+            else:
+                if user.check_password(raw_password):
+                    msg = None
+                    login(request, user)
+                    is_ok = True
+                    request.session["remember_me"] = remember_me
 
-    # 보이는 field가 어떤 것들이 있는지 반환해주는 함수
-    for visible in form.visible_fields():
-        # form의 field에도 클래스를 입혀 디자인 적용
-        visible.field.widget.attrs["placeholder"] = "유저ID" if visible.name == "username" else "패스워드"
-        visible.field.widget.attrs["class"] = "form-control"
+                    # 브라우저가 종료되고 세션 길이가 0이 되면 로그인 유지를 해제
+                    # 크롬에서는 브라우저 종료 시 독자적인 세션의 길이가 있어 적용이 되지 않음!
+                    # if not remember_me :
+                    #   request.session.set_expiry(0)
+    else:
+        #     form = AuthenticationForm()
+        #     # return render(request, "login.html", {"form": form})
+
+        # # 보이는 field가 어떤 것들이 있는지 반환해주는 함수
+        # for visible in form.visible_fields():
+        #     # form의 field에도 클래스를 입혀 디자인 적용
+        #     visible.field.widget.attrs["placeholder"] = "유저ID" if visible.name == "username" else "패스워드"
+        #     visible.field.widget.attrs["class"] = "form-control"
+        msg = None
+        form = LoginForm()
+    print("REMEMBER_ME : ", request.session.get("remember_me"))
     return render(request, "login.html", {"form": form, "msg": msg, "is_ok": is_ok})
 
 
 # 로그아웃 관련 추가
 def logout_view(request):
     logout(request)
-    return redirect("index_1")
+    # return redirect("index_1")
+    return redirect("login")
 
 
 # 게시판 관련 추가

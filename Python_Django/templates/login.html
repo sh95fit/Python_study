@@ -146,10 +146,14 @@
                 </div>
                 {% if msg %}
                 <p class="text-center text-sm text-danger">{{ msg }}</p>
-                {% endif %} {% if is_ok %}
-                <p class="text-center text-sm text-success">
+                {% endif %} 
+                {% comment %} {% if is_ok %} {% endcomment %}
+                {% comment %} <p class="text-center text-sm text-success">
                   로그인 성공 ({{ user.username }})
-                </p>
+                </p> {% endcomment %}
+                {% if is_ok or user.is_authenticated %}
+                <p class="text-center text-sm text-success">로그인 성공 ({{ user.username }}) </br>
+                <a class="text-primary" href="{% url 'logout' %}">로그아웃</a></p>
                 {% endif %}
                 <!-- 아이디 입력 -->
                 <form method="post">
@@ -165,7 +169,8 @@
                         ></span>
                       </div>
                       <!-- form의 field만 가져와서 활용! (form 자체를 가져오면 클래스를 통해 디자인을 입히는게 까다로움)-->
-                      {{ form.username }}
+                      {% comment %} {{ form.username }} {% endcomment %}
+                      {{ form.email }}
                     </div>
                   </div>
                   <!-- 패스워드 입력 -->
@@ -185,12 +190,14 @@
                   <div
                     class="custom-control custom-control-alternative custom-checkbox"
                   >
-                    <input
+                    {% comment %} <input
                       class="custom-control-input"
                       id=" customCheckLogin"
                       type="checkbox"
                     />
-                    <label class="custom-control-label" for=" customCheckLogin">
+                    <label class="custom-control-label" for=" customCheckLogin"> {% endcomment %}
+                      {{ form.remember_me }}
+                      <label class="custom-control-label" for="_loginRememberMe">
                       <span>로그인 유지하기</span>
                     </label>
                   </div>
