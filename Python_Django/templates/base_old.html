@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    <title>Hun's Django</title> <br />
+
+    {% comment %} 부트스트랩 활용 {% endcomment %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD" crossorigin="anonymous"></script>
+
+  </head>
+  <body>
+    {{ user }} <br />
+    {% for i in params %} {{i}} <br />
+    {% endfor %} {% if user.is_authenticated %}
+    <p><a href="{% url 'logout' %}">로그아웃</a></p>
+    {% else %}
+    <p><a href="{% url 'register' %}">회원가입</a></p>
+    <p><a href="{% url 'login' %}">로그인</a></p>
+    {% endif %} {% comment %} {{ welcome_msg }} {{ email }} <br />
+    {{ user }} <br />
+
+    {% for i in params %} {{i}} <br />
+    <!--for문의 끝맺음을 해주지 않으면 에러가 발생!-->
+    {% endfor %} <br />
+    {% endcomment %} {% comment %} 문법 활용 형태 예시 <br />
+    {% comment %} {% if user == "a" %} {% endif %} {% endcomment %}
+    
+    {% comment %} 상속 {% endcomment %}
+    {% block content %}
+    {% endblock %}
+  </body>
+</html>

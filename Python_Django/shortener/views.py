@@ -16,6 +16,7 @@ from django.contrib.auth.decorators import login_required
 # 로그인 폼 수정(이메일 로그인 + 로그인 유지)
 from shortener.forms import LoginForm
 
+
 # Create your views here.
 
 
@@ -32,6 +33,13 @@ def index(request):  # request는 항상 써야한다! 미들웨어에서 reques
         email = "Anonymous User!"
     print(email)
     return render(request, "base.html", {"welcome_msg": "Hello Django Server!", "email": f"{email}"})
+
+
+def url_list(request):
+    return render(
+        request,
+        "url_list.html",
+    )
 
 
 # 리다이렉트 활용 - 유저가 로그인해야만 볼 수 있는 페이지로 접근, 권한 없이 admin 페이지 접근 등

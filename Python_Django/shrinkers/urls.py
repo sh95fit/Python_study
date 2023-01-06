@@ -25,7 +25,8 @@ import debug_toolbar
 from shortener.views import login_view, logout_view
 # 게시판 관련 추가
 from shortener.views import list_view
-
+# url_list 추가
+from shortener.views import url_list
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -48,4 +49,7 @@ urlpatterns = [
 
     # 게시판 경로 추가
     path("list", list_view, name="list_view"),
+
+    # url_list 추가
+    path("url_list", url_list, name="url_list"),
 ]
