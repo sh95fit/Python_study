@@ -20,7 +20,11 @@ from shortener.views import index, get_user
 # 회원가입 관련 추가
 from shortener.views import register
 # debug_toolbar 추가
-import debug_toolbar
+# import debug_toolbar
+from shrinkers.settings import DEBUG
+# if DEBUG :
+#     import debug_toolbar
+
 # 로그인, 로그아웃 관련 추가
 from shortener.views import login_view, logout_view
 # 게시판 관련 추가
@@ -40,7 +44,7 @@ urlpatterns = [
     path("get_user/<int:user_id>", get_user),
 
     # Django Debug Toolbar 경로 설정
-    path("__debug__/", include(debug_toolbar.urls)),
+    # path("__debug__/", include(debug_toolbar.urls)),
 
     # 회원가입 관련 (/register로 이동하면 회원가입을 할 수 있도록 해줌!)
     # 단일로 하는 경우 뒤에 /를 포함핮 않아도 된다! 이후에 추가할 경로가 있는경우 붙여줘야함!
@@ -61,3 +65,8 @@ urlpatterns = [
     path("urls/create", url_create, name="url_create"),
     path("urls/<str:action>/<int:url_id>", url_change, name="url_change"),
 ]
+
+# if DEBUG:
+#     urlpatterns += [
+#         path("__debug__/", include(debug_toolbar.urls)),  # Django Debug Tool
+#     ]
