@@ -6,6 +6,7 @@ django-simple-tags==0.6.0
 django_debug_toolbar==3.8.1
 Faker==15.3.4
 gunicorn==20.1.0
+mysqlclient==2.1.1
 psycopg2==2.9.5
 pycodestyle==2.10.0
 python-dateutil==2.8.2
