@@ -39,63 +39,64 @@ def index(request):  # request는 항상 써야한다! 미들웨어에서 reques
     #     email = "Anonymous User!"
     # print(email)
     # return render(request, "base.html", {"welcome_msg": "Hello Django Server!", "email": f"{email}"})
-    return render(request, "base.html")
+    # return render(request, "base.html")
+    return render(request, "base.html", {"welcome_msg": "Hun's Short URL"})
 
 
-@login_required
-def url_list(request):
-    # return render(
-    #     request,
-    #     "url_list.html",
-    # )
-    get_list = ShortenedUrls.objects.order_by("-created_at").all()
-    return render(request, "url_list.html", {"list": get_list})
+# @login_required
+# def url_list(request):
+#     # return render(
+#     #     request,
+#     #     "url_list.html",
+#     # )
+#     get_list = ShortenedUrls.objects.order_by("-created_at").all()
+#     return render(request, "url_list.html", {"list": get_list})
 
 
-@login_required
-def url_create(request):
-    msg = None
-    if request.method == "POST":
-        form = UrlCreateForm(request.POST)
-        if form.is_valid():
-            msg = f"{form.cleaned_data.get('nick_name')} 생성 완료!"
-            messages.add_message(request, messages.INFO, msg)
-            form.save(request)
-            return redirect("url_list")
-        else:
-            form = UrlCreateForm()
-    else:
-        form = UrlCreateForm()
-    return render(request, "url_create.html", {"form": form})
+# @login_required
+# def url_create(request):
+#     msg = None
+#     if request.method == "POST":
+#         form = UrlCreateForm(request.POST)
+#         if form.is_valid():
+#             msg = f"{form.cleaned_data.get('nick_name')} 생성 완료!"
+#             messages.add_message(request, messages.INFO, msg)
+#             form.save(request)
+#             return redirect("url_list")
+#         else:
+#             form = UrlCreateForm()
+#     else:
+#         form = UrlCreateForm()
+#     return render(request, "url_create.html", {"form": form})
 
 
-@login_required
-def url_change(request, action, url_id):
-    if request.method == "POST":
-        url_data = ShortenedUrls.objects.filter(id=url_id)
-        if url_data.exists():
-            if url_data.first().created_by_id != request.user.id:
-                msg = "자신이 소유하지 않은 URL 입니다."
-            else:
-                if action == "delete":
-                    msg = f"{url_data.first().nick_name} 삭제 완료!"
-                    url_data.delete()
-                    messages.add_message(request, messages.INFO, msg)
-                elif action == "update":
-                    msg = f"{url_data.first().nick_name} 수정 완료!"
-                    form = UrlCreateForm(request.POST)
-                    form.update_form(request, url_id)
+# @login_required
+# def url_change(request, action, url_id):
+#     if request.method == "POST":
+#         url_data = ShortenedUrls.objects.filter(id=url_id)
+#         if url_data.exists():
+#             if url_data.first().created_by_id != request.user.id:
+#                 msg = "자신이 소유하지 않은 URL 입니다."
+#             else:
+#                 if action == "delete":
+#                     msg = f"{url_data.first().nick_name} 삭제 완료!"
+#                     url_data.delete()
+#                     messages.add_message(request, messages.INFO, msg)
+#                 elif action == "update":
+#                     msg = f"{url_data.first().nick_name} 수정 완료!"
+#                     form = UrlCreateForm(request.POST)
+#                     form.update_form(request, url_id)
 
-                    messages.add_message(request, messages.INFO, msg)
-        else:
-            msg = "해당 URL 정보를 찾을 수 없습니다."
+#                     messages.add_message(request, messages.INFO, msg)
+#         else:
+#             msg = "해당 URL 정보를 찾을 수 없습니다."
 
-    elif request.method == "GET" and action == "update":
-        url_data = ShortenedUrls.objects.filter(pk=url_id).first()
-        form = UrlCreateForm(instance=url_data)
-        return render(request, "url_create.html", {"form": form, "is_update": True})
+#     elif request.method == "GET" and action == "update":
+#         url_data = ShortenedUrls.objects.filter(pk=url_id).first()
+#         form = UrlCreateForm(instance=url_data)
+#         return render(request, "url_create.html", {"form": form, "is_update": True})
 
-    return redirect("url_list")
+#     return redirect("url_list")
 
 
 # 리다이렉트 활용 - 유저가 로그인해야만 볼 수 있는 페이지로 접근, 권한 없이 admin 페이지 접근 등
@@ -163,14 +164,18 @@ def login_view(request):
             remember_me = form.cleaned_data.get("remember_me")
             msg = "올바른 유저ID와 패스워드를 입력하세요."
             try:
-                user = Users.objects.get(email=email)
+                # user = Users.objects.get(email=email)
+                # ForeignKey를 통해 연결된 계정의 이메일을 가져오도록 하기 위해 user__email 형태 사용
+                user = Users.objects.get(user__email=email)
             except Users.DoesNotExist:
                 pass
                 # msg = "올바른 유저ID와 패스워드를 입력하세요."
             else:
-                if user.check_password(raw_password):
+                # if user.check_password(raw_password):
+                if user.user.check_password(raw_password):
                     msg = None
-                    login(request, user)
+                    # login(request, user)
+                    login(request, user.user)
                     is_ok = True
                     request.session["remember_me"] = remember_me
 
@@ -189,7 +194,7 @@ def login_view(request):
         #     visible.field.widget.attrs["class"] = "form-control"
         msg = None
         form = LoginForm()
-    print("REMEMBER_ME : ", request.session.get("remember_me"))
+    # print("REMEMBER_ME : ", request.session.get("remember_me"))
     return render(request, "login.html", {"form": form, "msg": msg, "is_ok": is_ok})
 
 

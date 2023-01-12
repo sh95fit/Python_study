@@ -29,10 +29,10 @@ from shrinkers.settings import DEBUG
 from shortener.views import login_view, logout_view
 # 게시판 관련 추가
 from shortener.views import list_view
-# url_list 추가
-from shortener.views import url_list
-# url_create, url_change 추가
-from shortener.views import url_create, url_change
+# # url_list 추가
+# from shortener.views import url_list
+# # url_create, url_change 추가
+# from shortener.views import url_create, url_change
 
 
 urlpatterns = [
@@ -61,9 +61,12 @@ urlpatterns = [
     # path("url_list", url_list, name="url_list"),
 
     # url 관련 경로 추가
-    path("urls", url_list, name="url_list"),
-    path("urls/create", url_create, name="url_create"),
-    path("urls/<str:action>/<int:url_id>", url_change, name="url_change"),
+    # path("urls", url_list, name="url_list"),
+    # path("urls/create", url_create, name="url_create"),
+    # path("urls/<str:action>/<int:url_id>", url_change, name="url_change"),
+
+    path("urls/", include("shortener.urls.urls")),
+
 ]
 
 # if DEBUG:
