@@ -16,10 +16,12 @@ import random
 
 # Create your models here.
 
+# 코드 중복을 최소화하기 위해 클래스 형태로 구성 후 상속시킴
 class TimeStampedModel(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    # 추상화 객체로 만들어 테이블을 생성하지 않고 상속되어 사용됨
     class Meta:
         abstract = True
 
@@ -28,8 +30,8 @@ class TimeStampedModel(models.Model):
 class PayPlan(TimeStampedModel):
     name = models.CharField(max_length=20)
     price = models.IntegerField()
-    updated_at = models.DateTimeField(auto_now=True)
-    create_at = models.DateTimeField(auto_now_add=True)
+    # updated_at = models.DateTimeField(auto_now=True)
+    # create_at = models.DateTimeField(auto_now_add=True)
 
 
 # 유료버전
@@ -46,8 +48,8 @@ class Organization(TimeStampedModel):
         max_length=15, choices=Industries.choices, default=Industries.OTHERS)
     pay_plan = models.ForeignKey(
         PayPlan, on_delete=models.DO_NOTHING, null=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    create_at = models.DateTimeField(auto_now_add=True)
+    # updated_at = models.DateTimeField(auto_now=True)
+    # create_at = models.DateTimeField(auto_now_add=True)
 
 
 # User 만들기
@@ -80,8 +82,8 @@ class EmailVerification(TimeStampedModel):
     user = models.ForeignKey(Users, on_delete=models.CASCADE)
     key = models.CharField(max_length=100, null=True)
     verified = models.BooleanField(default=False)
-    updated_at = models.DateTimeField(auto_now=True)
-    create_at = models.DateTimeField(auto_now_add=True)
+    # updated_at = models.DateTimeField(auto_now=True)
+    # create_at = models.DateTimeField(auto_now_add=True)
 
 
 # URL 카테고리 나누기
@@ -91,8 +93,8 @@ class Categories(TimeStampedModel):
     organization = models.ForeignKey(
         Organization, on_delete=models.DO_NOTHING, null=True)   # ForeignKey에 null이 가능하도록 하는 것은 꼬일 위험이 있으므로 지양
     creator = models.ForeignKey(Users, on_delete=models.CASCADE)
-    updated_at = models.DateTimeField(auto_now=True)
-    create_at = models.DateTimeField(auto_now_add=True)
+    # updated_at = models.DateTimeField(auto_now=True)
+    # create_at = models.DateTimeField(auto_now_add=True)
 
 
 # class ShortenedUrls(models.Model):
@@ -120,5 +122,5 @@ class ShortenedUrls(TimeStampedModel):
     shortened_url = models.CharField(max_length=6, default=rand_string)
     create_via = models.CharField(
         max_length=8, choices=UrlCreatedVia.choices, default=UrlCreatedVia.WEBSITE)
-    updated_at = models.DateTimeField(auto_now=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    # updated_at = models.DateTimeField(auto_now=True)
+    # created_at = models.DateTimeField(auto_now_add=True)
