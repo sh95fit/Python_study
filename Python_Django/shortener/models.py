@@ -124,3 +124,14 @@ class ShortenedUrls(TimeStampedModel):
         max_length=8, choices=UrlCreatedVia.choices, default=UrlCreatedVia.WEBSITE)
     # updated_at = models.DateTimeField(auto_now=True)
     # created_at = models.DateTimeField(auto_now_add=True)
+    expired_at = models.DateTimeField(null=True)
+
+    class Meta:
+        indexes = [
+            models.Index(
+                fields=[
+                    "prefix",
+                    "shortened_url",
+                ]
+            ),
+        ]
