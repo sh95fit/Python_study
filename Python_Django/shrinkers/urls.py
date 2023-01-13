@@ -36,6 +36,8 @@ from shrinkers.settings import DEBUG
 
 from shortener.urls.views import url_redirect
 
+from shortener.urls.urls import router as url_router
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -69,8 +71,10 @@ urlpatterns = [
 
     path("", include("shortener.index.urls")),
     path("urls/", include("shortener.urls.urls")),
-    path("<str:prefix>/<str:url>", url_redirect)
 
+    path("api/", include(url_router.urls)),
+
+    path("<str:prefix>/<str:url>", url_redirect)
 
 ]
 
