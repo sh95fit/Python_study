@@ -149,6 +149,7 @@ class ShortenedUrls(TimeStampedModel):
     def clicked(self):
         self.click += 1
         self.save()
+        return self
 
 
 class Statistic(TimeStampedModel):

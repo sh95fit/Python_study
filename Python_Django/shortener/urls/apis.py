@@ -21,6 +21,8 @@ from shortener.utils import MsgOk, url_count_changer
 
 from rest_framework.renderers import JSONRenderer
 
+from rest_framework.decorators import action
+
 # class UserViewSet(viewsets.ModelViewSet):
 #     """
 #     API endpoint that allow users to be viewed or edited.
@@ -74,3 +76,19 @@ class UrlListView(viewsets.ModelViewSet):
         queryset = self.get_queryset().all()
         serializer = UrlListSerializer(queryset, many=True)
         return Response(serializer.data)
+
+    # 디테일 뷰
+    @action(detail=True, methods=['get'])
+    # @action(detail=True, methods=['get', 'post'])
+    def add_click(self, request, pk=None):
+        # if request.method == "POST":
+        queryset = self.get_queryset().filter(pk=pk, creator_id=request.user.id)
+        if not queryset.exists():
+            raise Http404
+        rtn = queryset.first().clicked()
+        serializer = UrlListSerializer(rtn)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=["get"])
+    def remove_click(self, request, pk=None):
+        print("removed")
