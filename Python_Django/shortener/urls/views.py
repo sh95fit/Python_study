@@ -11,8 +11,12 @@ from django.contrib.gis.geoip2 import GeoIP2
 
 from shortener.utils import url_count_changer
 
+from django.db.models import Count
+from shortener.models import TrackingParams
 
 # 어뷰징과 같은 행위를 제한할 수 있음! 쓸모 없는 리소스 낭비를 막을 수 있다   ex> 3/m : 분당 3회 이상 발생시 제한
+
+
 @ratelimit(key="ip", rate="10/s")
 def url_redirect(request, prefix, url):
     # print(prefix, url)
@@ -29,13 +33,22 @@ def url_redirect(request, prefix, url):
     if not target.startswith("https://") and not target.startswitch("http://"):
         target = "https://" + get_url.target_url
 
+    custom_params = request.GET.dict() if request.GET.dict() else None
+
     history = Statistic()
-    history.record(request, get_url)
+    # history.record(request, get_url)
+    history.record(request, get_url, custom_params)
 
     return redirect(target, permanet=is_permanent)
 
 
 def url_list(request):
+    a = (
+        Statistic.objects.filter(shortened_url_id=13)
+        .values("custom_params__email_id")
+        .annotate(t=Count("custom_params__email_id"))
+    )
+    print(a)
     get_list = ShortenedUrls.objects.order_by("-created_at").all()
     return render(request, "url_list.html", {"list": get_list})
 

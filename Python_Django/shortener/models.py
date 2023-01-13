@@ -16,6 +16,13 @@ import string
 import random
 
 
+import itertools
+from typing import Dict
+
+from django.db.models.base import Model
+from shortener.model_utils import dict_filter, dict_slice, location_finder
+
+
 # Create your models here.
 
 # 코드 중복을 최소화하기 위해 클래스 형태로 구성 후 상속시킴
@@ -158,18 +165,46 @@ class Statistic(TimeStampedModel):
     country_code = models.CharField(max_length=2, default="XX")
     country_name = models.CharField(max_length=100, default="UNKNOWN")
 
-    def record(self, request, url: ShortenedUrls):
+    custom_params = models.JSONField(null=True)
+
+    # def record(self, request, url: ShortenedUrls):
+    def record(self, request, url: ShortenedUrls, params: Dict):
         self.shortened_url = url
         # 장고가 기본으로 가지고 있는 주소 (로드밸런서가 있는 경우 사용 불가! AWS 등에서 고객 주소를 헤더로 제공하는 것을 활용해야한다!)
         self.ip = request.META["REMOTE_ADDR"]
         self.web_browser = request.user_agent.browser.family
-        self.device = self.ApproachDevice.MOBILE if request.user_agent.is_mobile else self.ApproachDevice.TABLET if request.user_agent.is_tablet else self.ApproachDevice.PC
+        # self.device = self.ApproachDevice.MOBILE if request.user_agent.is_mobile else self.ApproachDevice.TABLET if request.user_agent.is_tablet else self.ApproachDevice.PC
+        self.device = (
+            self.ApproachDevice.MOBILE
+            if request.user_agent.is_mobile
+            else self.ApproachDevice.TABLET
+            if request.user_agent.is_tablet
+            else self.ApproachDevice.PC
+        )
         self.device_os = request.user_agent.os.family
+
+        t = TrackingParams.get_tracking_params(url.id)
+        self.custom_params = dict_slice(dict_filter(params, t), 5)
+
         try:
-            country = GeoIP2().country(self.ip)
+            # country = GeoIP2().country(self.ip)
+            country = location_finder(request)
             self.country_code = country.get("country_code", "XX")
             self.country_name = country.get("country_name", "UNKNOWN")
         except:
             pass
         url.clicked()
         self.save()
+
+
+class TrackingParams(TimeStampedModel):
+    shortened_url = models.ForeignKey(ShortenedUrls, on_delete=models.CASCADE)
+    params = models.CharField(max_length=20)
+
+    @classmethod
+    def get_tracking_params(cls, shortened_url_id):
+        # flat이 True일 때 -> ["email_id", "ref_by"]    단순히 리스트로 받기 위해 True 사용!
+        # flat이 False일 때 -> [{"params" : "email_id"}, {"params" : "ref_by"}]
+        return cls.objects.filter(shortened_url_id=shortened_url_id).values_list("params", flat=True)
+    # def get_tracking_params(cls, shortened_url_id: int):
+    #     return TrackingParams.objects.filter(shortened_url_id=shortened_url_id).values_list("params", flat=True)
