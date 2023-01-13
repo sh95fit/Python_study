@@ -38,6 +38,36 @@ from shortener.urls.views import url_redirect
 
 from shortener.urls.urls import router as url_router
 
+# Ninja 프레임워크 추가
+from ninja import NinjaAPI
+from shortener.users.apis import user as user_router
+
+
+# Swagger 관련
+# 버전 패치로 url 미사용!
+# from django.conf.urls import url
+from django.urls import re_path as url
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+
+schema_view = get_schema_view(
+    openapi.Info(
+        title="Shrinkers API",
+        default_version="v1",
+        description="Test description",
+        terms_of_service="https://www.google.com/policies/terms/",
+        contact=openapi.Contact(email="contact@snippets.local"),
+        license=openapi.License(name="BSD License"),
+    ),
+    public=True,
+    permission_classes=(permissions.AllowAny,),
+)
+
+
+apis = NinjaAPI(title="Shrinkers API")
+apis.add_router("/users/", user_router, tags=["TEST"])
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -74,7 +104,19 @@ urlpatterns = [
 
     path("api/", include(url_router.urls)),
 
-    path("<str:prefix>/<str:url>", url_redirect)
+
+    path("ninja-api/", apis.urls),
+
+
+    path("<str:prefix>/<str:url>", url_redirect),
+
+    # Swagger 관련
+    url(r"^swagger(?P<format>\.json|\.yaml)$",
+        schema_view.without_ui(cache_timeout=0), name="schema-json"),
+    url(r"^swagger/$", schema_view.with_ui("swagger",
+                                           cache_timeout=0), name="schema-swagger-ui"),
+    url(r"^redoc/$", schema_view.with_ui("redoc",
+                                         cache_timeout=0), name="schema-redoc"),
 
 ]
 
