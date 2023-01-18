@@ -66,7 +66,7 @@ schema_view = get_schema_view(
 
 
 apis = NinjaAPI(title="Shrinkers API")
-apis.add_router("/users/", user_router, tags=["TEST"])
+apis.add_router("/users/", user_router, tags=["Users"])
 
 
 urlpatterns = [

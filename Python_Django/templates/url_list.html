@@ -13,7 +13,10 @@
 <!-- content -->
 {% block content %}
 
+<!--
 <div class="row">
+-->
+<div class="row" id="vue_div">
   <div class="col-xl-12">
     <div class="card">
       <div class="card-header border-0">
@@ -40,8 +43,10 @@
             </tr>
           </thead>
           <tbody>
+            <!--
             {% for l in list%}
             <tr>
+            -->
               {% comment %}
               <th scope="row">Hun's Django</th>
               <td>huns-project.co.kr</td>
@@ -49,41 +54,70 @@
               <td>웹사이트</td>
               <td>2023년 1월 6일</td>
               {% endcomment %}
+              <!--
               <th scope="row">{{ l.nick_name }}</th>
-
+              -->
+            <tr v-for="l in urlLists">
+              <th scope="row">[[ l.nick_name ]]</th>
+              
+              <!--
               <td>{{ l.target_url }}</td>
+              -->
+              <td>[[ l.target_url ]] </td>
               {% comment %}
               <td>{{ l.shortened_url }}</td>
               <td>{{ l.created_via }}</td>
               {% endcomment %}
               <td>
+                <!--
                 <a href="/{{ l.prefix }}/{{ l.shortened_url }}" target="_blank">
                   {{ request.get_host }}/{{ l.prefix }}/{{ l.shortened_url }}
                 </a>
+                -->
+                <a :href="'/'+l.prefix+'/'+l.shortened_url" target="_blank">
+                  [[ l.prefix | addressAssembler(l.shortened_url)]]
+                </a>
               </td>
+              <!--
               <td>{{ l.created_via }}</td>
               <td>{{ l.created_at }}</td>
+              -->
+              <td>[[ l.create_via ]]</td>
+              <td>[[ l.created_at ]]</td>
               <td>
                 <!-- Form이 GET과 POST만 지원하므로 POST로 DELETE를 처리해야한다! -->
+                <!--
                 <form action="/urls/delete/{{ l.id }}" method="POST">
                   {% csrf_token %}
                   <a
                     href="/urls/update/{{ l.id }}"
                     class="btn btn-sm btn-primary"
                   >
+                -->
+                  <button  class="btn btn-sm btn-primary">
                     수정
+                  <!--
                   </a>
+                  -->
+                  <!--
                   <button
                     type="submit"
                     class="btn btn-sm btn-danger"
                     onclick="return confirm('정말 삭제 하시겠습니까?');"
                   >
+                  -->
+                  </button>
+                  <button @click="deleteUrl(l.id)" class="btn btn-sm btn-danger">
                     삭제
                   </button>
+                <!--
                 </form>
+                -->
               </td>
             </tr>
+            <!--
             {% endfor %}
+            -->
           </tbody>
         </table>
       </div>
@@ -92,15 +126,17 @@
 </div>
 
 <!-- Vue.js 적용 테스트-->
-<div id="vue_div">
+{% comment %} <div id="vue_div">
   <span style="margin-right:10px"> Times : [[ howManyTimes ]]</span>
   <a class="btn btn-sm btn-primary text-white" @click="howManyTimes+=1"> Hello </a>
   <a class="btn btn-sm btn-danger text-white" @click="howManyTimes-=1"> Bye </a>
   <a class="btn btn-sm btn-warning text-white" @click="howManyTimes=0"> I don't mind </a>
-</div>
-
+</div> {% endcomment %}
+  <!--
   {% if messages %}
+  -->
   <!-- 메세지 유무 확인 -->
+  <!--
   {% for message in messages %}
   <div
     aria-live="polite"
@@ -132,6 +168,85 @@
     $(".toast").toast("show");
   </script>
   {% endif %}
+  -->
+
+  <script>
+    let vm = new Vue({
+        delimiters: ['[[', ']]'],
+        el: '#vue_div',
+        data: {
+          newUrlName: null,
+          newUrlTarget: null,
+          urlLists: []
+        },
+        mounted() {
+          this.getList();
+        },
+        methods: {
+          getList: function () {
+            $("#vue_div").LoadingOverlay("show");
+            axios.get(`/api/urls/`,
+            ).then(function (response) {
+                vm.urlLists = response.data
+            }).catch(function (e) {
+            }).finally(function () {
+              $("#vue_div").LoadingOverlay("hide");
+            });
+          },
+          deleteUrl: function (urlId) {
+            const c = confirm('정말 삭제 하시겠습니까?');
+            if (!c) return;
+            axios.delete(`/api/urls/${urlId}`, {headers: {'X-CSRFToken': Cookies.get('csrftoken')}}
+            ).then(function (response) {
+            }).catch(function (e) {
+            }).finally(function () {
+              vm.getList();
+            });
+          },
+          getCookie: function (name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+              var cookies = document.cookie.split(';');
+              for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+              }
+            }
+          }
+        },
+        filters: {
+          addressAssembler: function(v, arg) {
+            const url = new URL(document.URL);
+            const host = url.host;
+            return `${host}/${v}/${arg}`
+          }
+        }
+    })
+  </script>
+
+
+  <!-- 스크립트 내 쿠키 얻는 함수(methods 내 deleteUrl 아래 위치) -->
+  <!--
+              getCookie: function (name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+              var cookies = document.cookie.split(';');
+              for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+              }
+            }
+          }
+  -->
+
 
   <!-- Vue.js 적용 테스트를 위한 스크립트 ! 보간법에 의한 형태가 이중 중괄호 형태가 Jinja 템플릿과 겹쳐서 사용하지 못하므로 "[[]]" 형태로 변경하여 사용!-->
   <!-- 이전 버전 형태로 적용 불가!-->
@@ -145,7 +260,7 @@
     });
   </script> {% endcomment %}
 
-  <script>
+  {% comment %} <script>
     let {createApp} = Vue
 
     createApp({
@@ -156,7 +271,7 @@
         }
       }
     }).mount("#vue_div")
-  </script>
+  </script> {% endcomment %}
 
   <!-- 전체 블록 닫기 -->
   {% endblock %}
