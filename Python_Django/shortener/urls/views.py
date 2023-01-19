@@ -18,6 +18,11 @@ from shortener.models import TrackingParams
 
 from datetime import datetime, timedelta
 
+# 캐시 처리를 위한 추가
+# never_cache의 경우 캐시가 불필요한 영역을 지정하기 위해 활용
+from django.views.decorators.cache import never_cache
+from django.views.decorators.cache import cache_page
+
 
 # 어뷰징과 같은 행위를 제한할 수 있음! 쓸모 없는 리소스 낭비를 막을 수 있다   ex> 3/m : 분당 3회 이상 발생시 제한
 @ratelimit(key="ip", rate="10/s")
@@ -112,6 +117,8 @@ def url_change(request, action, url_id):
     return redirect("url_list")
 
 
+# Per-view 캐싱 방법!
+@cache_page(10)
 @login_required
 def statistic_view(request, url_id: int):
     url_info = get_object_or_404(ShortenedUrls, pk=url_id)

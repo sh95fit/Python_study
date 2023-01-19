@@ -10,6 +10,10 @@
 {% block sub_breadscumb_highlight %}접속통계{% endblock%}
 <!-- 닉네임 -->
 {% block sub_breadscumb %}{{url.nick_name}}{% endblock %}
+
+<!-- Tempate Fragment 캐시 관련 추가 -->
+{% load cache %}
+
 <!-- 컨텐츠 -->
 {% block content %}
 
@@ -33,6 +37,9 @@
       </div>
     </div>
   </div>
+
+  {% comment %} Template Fragment 캐시 방법 {% endcomment %} {% cache 10 stats
+  %}
 
   <div class="col-xl-4">
     <div class="card h-100">
@@ -67,6 +74,7 @@
       </div>
     </div>
   </div>
+  {% endcache %}
 </div>
 
 <script>

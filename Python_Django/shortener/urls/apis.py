@@ -30,6 +30,9 @@ from datetime import timedelta
 from django.db.models.aggregates import Count, Min
 
 
+# 캐시 적용을 위한 내장 프레임워크 활용
+from django.core.cache import cache
+
 # class UserViewSet(viewsets.ModelViewSet):
 #     """
 #     API endpoint that allow users to be viewed or edited.
@@ -83,7 +86,12 @@ class UrlListView(viewsets.ModelViewSet):
     def list(self, request):
         # GET ALL
         # queryset = self.get_queryset().all()
-        queryset = self.get_queryset().filter(creator_id=request.user.id).all()
+        # queryset = self.get_queryset().filter(creator_id=request.user.id).all()
+        queryset = cache.get('url_list')
+        if not queryset:
+            queryset = self.get_queryset().filter(creator_id=request.user.id).all()
+            # 쿼리 캐시 방법
+            cache.set('url_list', queryset, 300)
         serializer = UrlListSerializer(queryset, many=True)
         return Response(serializer.data)
 
