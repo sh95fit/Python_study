@@ -1,2 +1,3 @@
 shrinkers/settings.py
 __pycache__/
+shrinkers/service_key.json
