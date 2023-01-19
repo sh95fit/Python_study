@@ -4,6 +4,8 @@ from rest_framework import serializers
 
 from shortener.utils import url_count_changer
 
+import requests
+
 
 class UserBaseSerializer(serializers.ModelSerializer):
     class Meta:
