@@ -29,6 +29,12 @@ class UrlListSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class BrowerStatSerializer(serializers.Serializer):
+    web_browser = serializers.CharField(max_length=50)
+    count = serializers.IntegerField()
+    date = serializers.DateField(source='created_at__date', required=False)
+
+
 class UrlCreateSerializer(serializers.Serializer):
     nick_name = serializers.CharField(max_length=50)
     target_url = serializers.CharField(max_length=2000)
@@ -48,5 +54,5 @@ class UrlCreateSerializer(serializers.Serializer):
                 print(e)
             else:
                 url_count_changer(request, True)
-        print(instance)
+        # print(instance)
         return instance

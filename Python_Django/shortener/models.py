@@ -49,9 +49,9 @@ class Organization(TimeStampedModel):
     class Industries(models.TextChoices):
         PERSONAL = "personal"
         RETAIL = "retail"
-        MANUFCTURING = "manufacturing"
+        MANUFACTURING = "manufacturing"
         IT = "it"
-        OTHERS = 'others'
+        OTHERS = "others"
     name = models.CharField(max_length=50)
     industry = models.CharField(
         max_length=15, choices=Industries.choices, default=Industries.OTHERS)
@@ -68,7 +68,7 @@ class Organization(TimeStampedModel):
 # 유저 테이블이 상속 받으면서 기존 유저 테이블이 쓸모가 없어지므로 인증을 위해 어떤 유저 모델을 쓸지 정의해주어야 함
 # class Users(AbstractUser):
 class Users(models.Model):
-    user = models.OneToOneField(U, on_delete=models.CASCADE)    #
+    user = models.OneToOneField(U, on_delete=models.CASCADE)
     full_name = models.CharField(max_length=100, null=True)
     telegram_username = models.CharField(max_length=100, null=True)
     # pay_plan = models.ForeignKey(

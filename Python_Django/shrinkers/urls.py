@@ -108,8 +108,6 @@ urlpatterns = [
     path("ninja-api/", apis.urls),
 
 
-    path("<str:prefix>/<str:url>", url_redirect),
-
     # Swagger 관련
     url(r"^swagger(?P<format>\.json|\.yaml)$",
         schema_view.without_ui(cache_timeout=0), name="schema-json"),
@@ -118,6 +116,7 @@ urlpatterns = [
     url(r"^redoc/$", schema_view.with_ui("redoc",
                                          cache_timeout=0), name="schema-redoc"),
 
+    path("<str:prefix>/<str:url>", url_redirect),
 ]
 
 # if DEBUG:

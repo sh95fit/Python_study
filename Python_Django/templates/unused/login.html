@@ -1,4 +1,5 @@
 {% load static %}
+
 <!--
 =========================================================
 * Impact Design System - v1.0.0
@@ -10,7 +11,29 @@
 =========================================================
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 -->
+
 <!DOCTYPE html>
+{% comment %}
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Hun's Django</title>
+  </head>
+  <body>
+    <h2>로그인</h2>
+    <h4>{% if msg %}{{ msg }}{% endif %}</h4>
+    <form method="post">
+      {% csrf_token %} {{ form.as_p }}
+      <button type="submit">로그인</button>
+    </form>
+    <p>
+      <a href="{% url 'index_1' %}">홈으로</a>
+      <a href="{% url 'register' %}">회원가입</a>
+    </p>
+  </body>
+</html>
+{% endcomment %}
+
 <html>
   <head>
     <meta charset="utf-8" />
@@ -20,12 +43,13 @@
     />
     <meta
       name="description"
-      content="Start your development with a Dashboard for Bootstrap 4."
+      content="Start your development with a Dashboard for Bootstrap 5."
     />
     <meta name="author" content="Creative Tim" />
-    <title>Impact Dashboard - Login</title>
 
-    <!-- Fonts -->
+    <title>Hun's Django Login</title>
+
+    <!-- Font -->
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700"
@@ -57,7 +81,6 @@
       type="text/css"
     />
   </head>
-
   <body class="bg-white">
     <!-- Main content -->
     <div class="main-content">
@@ -69,7 +92,7 @@
               <div class="col-xl-5 col-lg-6 col-md-8 px-5">
                 <h1 class="text-white">로그인</h1>
                 <p class="text-lead text-white">
-                  Shrinkers에 오신것을 환영합니다.
+                  Hun's Shortener에 오신것을 환영합니다.
                 </p>
               </div>
             </div>
@@ -123,13 +146,18 @@
                 </div>
                 {% if msg %}
                 <p class="text-center text-sm text-danger">{{ msg }}</p>
-                {% endif %} {% if is_ok or user.is_authenticated %}
-                <p class="text-center text-sm text-success">
-                  로그인 성공({{ user.username }})
-                  <a class="text-primary" href="{% url 'logout' %}">로그아웃</a>
-                </p>
+                {% endif %} 
+                {% comment %} {% if is_ok %} {% endcomment %}
+                {% comment %} <p class="text-center text-sm text-success">
+                  로그인 성공 ({{ user.username }})
+                </p> {% endcomment %}
+                {% if is_ok or user.is_authenticated %}
+                <p class="text-center text-sm text-success">로그인 성공 ({{ user.username }}) </br>
+                <a class="text-primary" href="{% url 'logout' %}">로그아웃</a></p>
                 {% endif %}
+                <!-- 아이디 입력 -->
                 <form method="post">
+                  <!-- 요청마다 유효한 토큰 제공 즉, 할당된 웹사이트에서만 로그인 가능하도록 보안 적용,중복 로그인 제한-->
                   {% csrf_token %}
                   <div class="form-group mb-3">
                     <div
@@ -140,9 +168,12 @@
                           ><i class="ni ni-user-run"></i
                         ></span>
                       </div>
+                      <!-- form의 field만 가져와서 활용! (form 자체를 가져오면 클래스를 통해 디자인을 입히는게 까다로움)-->
+                      {% comment %} {{ form.username }} {% endcomment %}
                       {{ form.email }}
                     </div>
                   </div>
+                  <!-- 패스워드 입력 -->
                   <div class="form-group">
                     <div
                       class="input-group input-group-merge input-group-alternative"
@@ -155,14 +186,22 @@
                       {{ form.password }}
                     </div>
                   </div>
+                  <!-- 로그인 유지하기 체크박스+라벨 -->
                   <div
                     class="custom-control custom-control-alternative custom-checkbox"
                   >
-                    {{ form.remember_me }}
-                    <label class="custom-control-label" for="_loginRememberMe">
+                    {% comment %} <input
+                      class="custom-control-input"
+                      id=" customCheckLogin"
+                      type="checkbox"
+                    />
+                    <label class="custom-control-label" for=" customCheckLogin"> {% endcomment %}
+                      {{ form.remember_me }}
+                      <label class="custom-control-label" for="_loginRememberMe">
                       <span>로그인 유지하기</span>
                     </label>
                   </div>
+                  <!-- 로그인하기 버튼 -->
                   <div class="text-center">
                     <button type="submit" class="btn btn-primary my-4">
                       로그인
@@ -171,6 +210,7 @@
                 </form>
               </div>
             </div>
+            <!-- 비밀번호 찾기, 회원가입 부분 -->
             <div class="row mt-3">
               <div class="col-6">
                 <a href="#" class="text-gray"><small>비밀번호 찾기</small></a>

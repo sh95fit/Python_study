@@ -1,15 +1,21 @@
 {% extends 'base.html' %}
+<!-- load -->
 {% load static %}
+<!-- title -->
 {% block title%}단축 URL 생성{% endblock %}
-{% block sub_breadscumb %}URL 생성{% endblock %}
-{% block main_breadscumb%}URL 리스트{% endblock %}
-{% block sub_breadscumb_highlight %}단축 URL {% endblock%}
-{% block content %}
+<!-- main_breadscumb -->
+{% block main_breadscumb%}URL 생성{% endblock %}
+<!-- sub_breadscumb_highlight -->
+{% block sub_breadscumb_highlight %}URL 리스트{% endblock%}
+<!-- sub_breadscumb -->
+{% block sub_breadscumb %}단축 URL{% endblock %}
 
+<!-- content -->
+{% block content %}
 <div class="row">
-  <div class="col-xl-12">
+<div class="col-xl-12">
     <div class="card">
-      <div class="card-header border-0">
+    <div class="card-header border-0">
         <div class="row align-items-center">
             {% if is_update %}
             <h3>{{form.nick_name.value}} 수정하기</h5>
@@ -17,8 +23,8 @@
             <h3>단축 URL 만들기</h5>
             {% endif %}
         </div>
-      </div>
-      <div class="card-body">
+    </div>
+    <div class="card-body">
         <form method="post">
             {% csrf_token %}
             <div class="row">
@@ -39,8 +45,8 @@
                 </button>
             </div>
         </form>
-      </div>
     </div>
-  </div>
+    </div>
+</div>
 </div>
 {% endblock %}

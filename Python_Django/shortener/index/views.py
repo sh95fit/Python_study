@@ -38,10 +38,10 @@ def register(request):
             raw_password = form.cleaned_data.get("password1")
             user = authenticate(username=username, password=raw_password)
             login(request, user)
-            msg = "회원가입 완료"
+            msg = "회원가입완료"
         return render(request, "register.html", {"form": form, "msg": msg})
     else:
-        form = RegisterForm
+        form = RegisterForm()
         return render(request, "register.html", {"form": form})
 
 
@@ -64,7 +64,7 @@ def login_view(request):
                     login(request, user.user)
                     is_ok = True
                     request.session["remember_me"] = remember_me
-                    return redirect("url_list")
+                    return redirect("index")
 
                     # if not remember_me:
                     #     request.session.set_expiry(0)
@@ -72,7 +72,7 @@ def login_view(request):
         msg = None
         form = LoginForm()
         if request.user.is_authenticated:
-            return redirect("url_list")
+            return redirect("index")
     return render(request, "login.html", {"form": form, "msg": msg, "is_ok": is_ok})
 
 

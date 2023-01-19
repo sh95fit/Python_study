@@ -1,3 +1,4 @@
+
 import itertools
 from typing import Dict, List
 from django.contrib.gis.geoip2 import GeoIP2
