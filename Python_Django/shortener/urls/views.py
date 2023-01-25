@@ -26,6 +26,9 @@ from django.views.decorators.cache import cache_page
 # 텔레그램 연동을 위한 추가
 from shortener.urls.telegram_handler import command_handler
 
+# 어드민과 서비스 접속 분리를 위한 데코레이터 추가
+from shortener.urls.decorators import admin_only
+
 
 # 어뷰징과 같은 행위를 제한할 수 있음! 쓸모 없는 리소스 낭비를 막을 수 있다   ex> 3/m : 분당 3회 이상 발생시 제한
 @ratelimit(key="ip", rate="10/s")
@@ -53,6 +56,7 @@ def url_redirect(request, prefix, url):
 
 
 @login_required
+@admin_only
 def url_list(request):
     # a = (
     #     Statistic.objects.filter(shortened_url_id=13)

@@ -10,6 +10,7 @@ user = Router()
 
 
 @user.get("", response=List[U])
+# @admin_only
 def get_user(request):
     # Django ORM 사용!
     a = Users.objects.all()

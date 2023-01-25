@@ -43,6 +43,7 @@ class UrlListView(viewsets.ModelViewSet):
     queryset = ShortenedUrls.objects.order_by("-created_at")
     # queryset = ShortenedUrls.objects.all().order_by("-created_at")
     serializer_class = UrlListSerializer
+    # permissions.IsAdminUser : DRF에서는 별도로 admin_only 데코레이터을 사용하지 않아도 어드민 판단이 가능하다!
     permission_classes = [permissions.IsAuthenticated]
 
     def create(self, request):
@@ -80,6 +81,8 @@ class UrlListView(viewsets.ModelViewSet):
             raise Http404
         print(123123)
         queryset.delete()
+        # 쿼리가 끝나면 캐시를 지워주도록 설정
+        cache.delete(f"url_lists_{request.users_id}")
         url_count_changer(request, False)
         return MsgOk()
 
@@ -88,12 +91,14 @@ class UrlListView(viewsets.ModelViewSet):
         # queryset = self.get_queryset().all()
         # queryset = self.get_queryset().filter(creator_id=request.user.id).all()
         # queryset = cache.get('url_list')
-        queryset = cache.get('url_lists')
+        # queryset = cache.get('url_lists')
+        queryset = cache.get(f"url_lists_{request.users_id}")
         if not queryset:
             queryset = self.get_queryset().filter(creator_id=request.user.id).all()
             # 쿼리 캐시 방법
             # cache.set('url_list', queryset, 300)
-            cache.set('url_lists', queryset, 20)
+            # cache.set('url_lists', queryset, 20)
+            cache.set(f"url_lists_{request.users_id}", queryset, 20)
         serializer = UrlListSerializer(queryset, many=True)
         return Response(serializer.data)
 
