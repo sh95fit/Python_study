@@ -23,7 +23,7 @@ class ShrinkersMiddleware:
             endpoint = request.get_full_path_info()
             ip = (
                 request.headers["X-Forwarded-For"].split(",")[0]
-                if "x-forwarded-for" in request.headers.keys()
+                if "X-Forwarded-For" in request.headers.keys()
                 else request.META.get("REMOTE_ADDR", None)
             )
             # X-Forwarded-For: <supplied-value>,<client-ip>,<load-balancer-ip>
