@@ -13,8 +13,8 @@ from shortener.models import DailyVisitors
 def visitors():
     SCOPES = ["https://www.googleapis.com/auth/analytics.readonly"]
     KEY_FILE_LOCATION = os.path.join(
-        settings.BASE_DIR, "shrinkers/service_key.json")
-    VIEW_ID = "ga:283588643"
+        settings.BASE_DIR, "shrinkers/service_key.json")    # Service_key의 경우 GCP 접속 -> API 및 서비스에서 추가 후 IAM에서 서비스 계정 생성 + 키 생성 -> service_key.json 다운 -> 애널리틱스 계정 액세스 관리에 이메일 추가
+    VIEW_ID = "ga:283588643"    # 보기 설정에 보기 ID 복사 붙여넣기!
     print("Visitor Collected")
     today = datetime.utcnow() + timedelta(hours=9)
     today = date(today.year, today.month, today.day)
