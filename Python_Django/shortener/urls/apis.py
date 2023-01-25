@@ -51,6 +51,7 @@ class UrlListView(viewsets.ModelViewSet):
         serializer = UrlCreateSerializer(data=request.data)
         # print(serializer.is_valid())
         if serializer.is_valid():
+            cache.delete(f"url_lists_{request.users_id}")
             rtn = serializer.create(request, serializer.data)
             return Response(UrlListSerializer(rtn).data, status=status.HTTP_201_CREATED)
         pass
@@ -76,10 +77,10 @@ class UrlListView(viewsets.ModelViewSet):
         # DELETE METHOD
         # pass
         queryset = self.get_queryset().filter(pk=pk, creator_id=request.user.id)
-        print(pk, request.user.id)
+        # print(pk, request.user.id)
         if not queryset.exists():
             raise Http404
-        print(123123)
+        # print(123123)
         queryset.delete()
         # 쿼리가 끝나면 캐시를 지워주도록 설정
         cache.delete(f"url_lists_{request.users_id}")

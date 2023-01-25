@@ -30,6 +30,9 @@ from shortener.urls.telegram_handler import command_handler
 from shortener.urls.decorators import admin_only
 
 
+from shortener.ga import visitors
+
+
 # 어뷰징과 같은 행위를 제한할 수 있음! 쓸모 없는 리소스 낭비를 막을 수 있다   ex> 3/m : 분당 3회 이상 발생시 제한
 @ratelimit(key="ip", rate="10/s")
 def url_redirect(request, prefix, url):
@@ -68,7 +71,8 @@ def url_list(request):
     # get_list = ShortenedUrls.objects.order_by(
     #     "-created_at").filter(creator_id=request.user.id).all()
     # return render(request, "url_list.html", {"list": get_list})
-    command_handler()
+    # command_handler()
+    visitors()
     return render(request, "url_list.html", {})
 
 

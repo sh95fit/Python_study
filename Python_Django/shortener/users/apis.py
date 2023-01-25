@@ -5,11 +5,13 @@ from ninja.router import Router
 
 from shortener.schemas import TelegramUpdateSchema
 
+from shortener.urls.decorators import admin_only
 
 user = Router()
 
 
 @user.get("", response=List[U])
+@admin_only
 # @admin_only
 def get_user(request):
     # Django ORM 사용!

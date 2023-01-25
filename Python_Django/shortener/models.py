@@ -227,3 +227,11 @@ class BackOfficeLogs(TimeStampedModel):
     user_id = models.IntegerField(blank=True, null=True)
     ip = models.CharField(max_length=30, blank=True, null=True)
     status_code = models.IntegerField(blank=True, null=True)
+
+
+# 구글 애널리틱스에서 받아온 방문자 수를 반영하기 위한 클래스
+class DailyVisitors(models.Model):
+    visit_date = models.DateField()
+    visits = models.IntegerField(default=0)
+    totals = models.IntegerField(default=0)
+    last_updated_on = models.DateTimeField(auto_now=True)
