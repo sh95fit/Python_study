@@ -5,6 +5,9 @@ from shortener.urls.decorators import admin_only
 from django.db.models.query import Prefetch
 from shortener.models import ShortenedUrls, Statistic
 
+# 서브 쿼리 사용 시 추가
+from django.db.models import Subquery, OuterRef
+
 
 @login_required
 @admin_only
@@ -39,7 +42,20 @@ def url_list(request):
         )
         .all()
     )
-    print(urls)
+
+    # 서브 쿼리 활용
+    # 서브 쿼리가 실행되는 시점 : 슬라이싱할 때, first/last/count 등이 실행될 때 등
+    # 따라서 장고가 실행될 때 에러를 잡아내지 못한다!
+    # subquery = Statistic.objects.filter(
+    #     shortened_url_id=OuterRef("pk")).order_by("-id")
+    # urls_ = ShortenedUrls.objects.annotate(
+    #     last_visit_browser=Subquery(subquery.values("web_browser")[:1]))
+
+    # for u in urls_:
+    #     print(u.id, u.last_visit_browser)
+
+    # print(urls)
+
     # for u in urls:
     #     print(u.chrome_usage)
     #     for e in u.chrome_usage:
