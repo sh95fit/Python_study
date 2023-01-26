@@ -36,9 +36,9 @@ def url_list(request):
             Prefetch("creator__user"),
             Prefetch("creator__organization"),
             Prefetch("creator__organization__pay_plan"),
-            Prefetch("statistic_set"),
-            #     Prefetch("statistic_set", queryset=Statistic.objects.filter(
-            #         web_browser="Chrome"), to_attr="chrome_usage"),
+            # Prefetch("statistic_set"),
+            Prefetch("statistic_set", queryset=Statistic.objects.filter(
+                web_browser="Chrome"), to_attr="chrome_usage"),
         )
         .all()
     )
