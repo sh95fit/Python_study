@@ -33,6 +33,9 @@ from shortener.urls.telegram_handler import command_handler
 from shortener.ga import visitors
 
 
+from re import I
+
+
 # 어뷰징과 같은 행위를 제한할 수 있음! 쓸모 없는 리소스 낭비를 막을 수 있다   ex> 3/m : 분당 3회 이상 발생시 제한
 @ratelimit(key="ip", rate="10/s")
 def url_redirect(request, prefix, url):
@@ -99,7 +102,8 @@ def url_change(request, action, url_id):
         url_data = ShortenedUrls.objects.filter(id=url_id)
         if url_data.exists():
             # if url_data.first().creator_id != request.user.id:
-            if url_data.first().creator_id != request.users_id:
+            # if url_data.first().creator_id != request.users_id:
+            if url_data.first().creator_id != request.users_id and not request.user.is_superuser:
                 msg = "자신이 소유하지 않은 URL입니다."
             else:
                 if action == "delete":
@@ -115,7 +119,9 @@ def url_change(request, action, url_id):
                 elif action == "update":
                     msg = f"{url_data.first().nick_name} 수정 완료!"
                     form = UrlCreateForm(request.POST)
-                    form.update_form(request, url_id)
+                    # form.update_form(request, url_id)
+                    form.update_form(
+                        request, url_id, is_admin=request.user.is_superuser)
 
                     messages.add_message(request, messages.INFO, msg)
 

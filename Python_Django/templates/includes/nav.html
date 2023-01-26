@@ -58,7 +58,8 @@
               </ul>
               {% if user.is_superuser%}
               <li class="nav">
-                <a href="{% url 'url_list' %}" class="nav-link">
+                {% comment %} <a href="{% url 'url_list' %}" class="nav-link"> {% endcomment %}
+                <a href="{% url 'admin_url_list' %}" class="nav-link">
                   <span class="sidenav-mini-icon">
                     <i class="fas fa-angle-up"></i>
                   </span>
