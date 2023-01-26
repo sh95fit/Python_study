@@ -51,7 +51,7 @@ class UrlListView(viewsets.ModelViewSet):
         serializer = UrlCreateSerializer(data=request.data)
         # print(serializer.is_valid())
         if serializer.is_valid():
-            cache.delete(f"url_lists_{request.users_id}")
+            # cache.delete(f"url_lists_{request.users_id}")
             rtn = serializer.create(request, serializer.data)
             return Response(UrlListSerializer(rtn).data, status=status.HTTP_201_CREATED)
         pass
@@ -76,14 +76,15 @@ class UrlListView(viewsets.ModelViewSet):
     def destroy(self, request, pk=None):
         # DELETE METHOD
         # pass
-        queryset = self.get_queryset().filter(pk=pk, creator_id=request.user.id)
+        # queryset = self.get_queryset().filter(pk=pk, creator_id=request.user.id)
+        queryset = self.get_queryset().filter(pk=pk, creator_id=request.users_id)
         # print(pk, request.user.id)
         if not queryset.exists():
             raise Http404
         # print(123123)
         queryset.delete()
         # 쿼리가 끝나면 캐시를 지워주도록 설정
-        cache.delete(f"url_lists_{request.users_id}")
+        # cache.delete(f"url_lists_{request.users_id}")
         url_count_changer(request, False)
         return MsgOk()
 
@@ -93,13 +94,14 @@ class UrlListView(viewsets.ModelViewSet):
         # queryset = self.get_queryset().filter(creator_id=request.user.id).all()
         # queryset = cache.get('url_list')
         # queryset = cache.get('url_lists')
-        queryset = cache.get(f"url_lists_{request.users_id}")
-        if not queryset:
-            queryset = self.get_queryset().filter(creator_id=request.user.id).all()
-            # 쿼리 캐시 방법
-            # cache.set('url_list', queryset, 300)
-            # cache.set('url_lists', queryset, 20)
-            cache.set(f"url_lists_{request.users_id}", queryset, 20)
+        # queryset = cache.get(f"url_lists_{request.users_id}")
+        # if not queryset:
+        #     queryset = self.get_queryset().filter(creator_id=request.user.id).all()
+        # 쿼리 캐시 방법
+        # cache.set('url_list', queryset, 300)
+        # cache.set('url_lists', queryset, 20)
+        # cache.set(f"url_lists_{request.users_id}", queryset, 20)
+        queryset = self.get_queryset().filter(creator_id=request.users_id).all()
         serializer = UrlListSerializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -110,7 +112,8 @@ class UrlListView(viewsets.ModelViewSet):
     #     # if request.method == "POST":
     #     queryset = self.get_queryset().filter(pk=pk, creator_id=request.user.id)
     def add_browser_today(self, request, pk=None):
-        queryset = self.get_queryset().filter(pk=pk, creator_id=request.user.id).first()
+        # queryset = self.get_queryset().filter(pk=pk, creator_id=request.user.id).first()
+        queryset = self.get_queryset().filter(pk=pk, creator_id=request.users_id).first()
         new_history = Statistic()
         new_history.record(request, queryset, {})
         return MsgOk()
@@ -119,7 +122,8 @@ class UrlListView(viewsets.ModelViewSet):
     def get_browser_stats(self, request, pk=None):
         queryset = Statistic.objects.filter(
             shortened_url_id=pk,
-            shortened_url__creator_id=request.user.id,
+            # shortened_url__creator_id=request.user.id,
+            shortened_url__creator_id=request.users_id,
             created_at__gte=get_kst() - timedelta(days=14),
         )
         if not queryset.exists():

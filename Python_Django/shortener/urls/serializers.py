@@ -34,7 +34,8 @@ class UrlListSerializer(serializers.ModelSerializer):
 class BrowerStatSerializer(serializers.Serializer):
     web_browser = serializers.CharField(max_length=50)
     count = serializers.IntegerField()
-    date = serializers.DateField(source='created_at__date', required=False)
+    # date = serializers.DateField(source='created_at__date', required=False)
+    date = serializers.DateField(source="created_at__date", required=False)
 
 
 class UrlCreateSerializer(serializers.Serializer):
@@ -45,7 +46,9 @@ class UrlCreateSerializer(serializers.Serializer):
     def create(self, request, data, commit=True):
         # print(data)
         instance = ShortenedUrls()
-        instance.creator_id = request.user.id
+        # instance.creator_id = request.user.id
+        users = Users.objects.filter(request.users_id).first()
+        instance.creator = users
         instance.category = data.get("category", None)
         # instance.target_url = data.get("target_url", None).strip()
         instance.target_url = data.get("target_url").strip()

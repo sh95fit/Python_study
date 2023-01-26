@@ -117,6 +117,8 @@ urlpatterns = [
                                          cache_timeout=0), name="schema-redoc"),
 
     path("<str:prefix>/<str:url>", url_redirect),
+
+    path("admins/", include("shortener.admins.urls")),
 ]
 
 # if DEBUG:

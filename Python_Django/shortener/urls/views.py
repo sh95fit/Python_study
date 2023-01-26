@@ -27,7 +27,7 @@ from django.views.decorators.cache import cache_page
 from shortener.urls.telegram_handler import command_handler
 
 # 어드민과 서비스 접속 분리를 위한 데코레이터 추가
-from shortener.urls.decorators import admin_only
+# from shortener.urls.decorators import admin_only
 
 
 from shortener.ga import visitors
@@ -59,7 +59,7 @@ def url_redirect(request, prefix, url):
 
 
 @login_required
-@admin_only
+# @admin_only
 def url_list(request):
     # a = (
     #     Statistic.objects.filter(shortened_url_id=13)
@@ -98,7 +98,8 @@ def url_change(request, action, url_id):
     if request.method == "POST":
         url_data = ShortenedUrls.objects.filter(id=url_id)
         if url_data.exists():
-            if url_data.first().creator_id != request.user.id:
+            # if url_data.first().creator_id != request.user.id:
+            if url_data.first().creator_id != request.users_id:
                 msg = "자신이 소유하지 않은 URL입니다."
             else:
                 if action == "delete":
