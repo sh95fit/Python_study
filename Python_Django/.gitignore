@@ -2,3 +2,6 @@ shrinkers/settings.py
 __pycache__/
 shrinkers/service_key.json
 shortener/urls/telegram_handler.py
+cache_file/
+*.djcache
+.vscode
