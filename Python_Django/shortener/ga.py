@@ -76,7 +76,7 @@ def visitors():
             """
             analytics = initialize_analyticsreporting()
             response = get_report(analytics)
-            print(response)
+            # print(response)
             # data = response["reports"][0]["data"]["rows"]
             # today_str = today.strftime("%Y%m%d")
             # yesterday_str = yesterday.strftime("%Y%m%d")

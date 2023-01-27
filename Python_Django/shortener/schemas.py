@@ -32,6 +32,10 @@ class Message(Schema):
     msg: str
 
 
+class TelegramSendMsgBody(Schema):
+    msg: str
+
+
 class UserRegisterBody(Schema):
     email: EmailStr
     name: str
