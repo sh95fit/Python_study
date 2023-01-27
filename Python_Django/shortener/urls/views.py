@@ -75,7 +75,7 @@ def url_list(request):
     #     "-created_at").filter(creator_id=request.user.id).all()
     # return render(request, "url_list.html", {"list": get_list})
     # command_handler()
-    visitors()
+    # visitors()
     return render(request, "url_list.html", {})
 
 

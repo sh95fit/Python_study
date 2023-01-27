@@ -52,6 +52,9 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
 
+# 스케줄러
+from shortener.scheduler import cron_jobs
+
 if DEBUG:
     import debug_toolbar
 
@@ -135,3 +138,7 @@ if DEBUG:
     urlpatterns += [
         path("__debug__/", include(debug_toolbar.urls)),  # Django Debug Tool
     ]
+
+
+# 1회성 실행을 위해 추가
+cron_jobs()
