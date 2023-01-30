@@ -8,6 +8,10 @@ import json
 from django.test import Client
 
 
+# mocking
+from unittest.mock import patch
+
+
 # Create your tests here.
 
 
@@ -79,6 +83,17 @@ class AuthTest(TestCase):
                      content_type="application/json")
         # Email Duplicate
         self.assertEqual(res.status_code, 201)
+
+    @patch("shortener.middleware.ShrinkersMiddleware.log_action", return_value="Mock!")
+    def test_login(self, mock):
+        """login 테스트"""
+        c = Client()
+        body = {"email": "test11@test.com",
+                "password": "12341235", "remember_me": True}
+        res = c.post("/login", body)
+        # No Matched User
+        print(mock.return_value)
+        self.assertEqual(res.status_code, 200)
 
 
 class UrlManagementTest(TestCase):
